@@ -28,7 +28,6 @@
             perspective: 2000px;
         }
 
-        /* 10XX CLEAN SPATIAL LANDING PAGE */
         #landing { 
             position: fixed; inset: 0; z-index: 9999; 
             background: var(--bg-dark);
@@ -108,10 +107,6 @@
             position: absolute; inset: -25px; border: 2px dashed rgba(0,240,255,0.4); border-radius: 50%;
             animation: spin-slow 15s linear infinite; pointer-events: none;
         }
-        .data-ring::after {
-            content: ''; position: absolute; inset: -12px; border: 1px solid rgba(255,61,188,0.4); border-radius: 50%;
-            animation: spin-slow-reverse 10s linear infinite;
-        }
         .diamond-layer-1, .diamond-layer-2, .diamond-layer-3 {
             position: absolute; inset: 0; border: 2px solid transparent; transform: rotate(45deg); transition: all 0.5s;
         }
@@ -120,12 +115,8 @@
         .diamond-layer-3 { inset: 30px; background: rgba(0, 240, 255, 0.1); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.8); animation: pulse-glow 2s infinite alternate; }
         
         .diamond-core-container:hover { transform: scale(1.15) translateZ(80px); }
-        .diamond-core-container:hover .diamond-layer-1 { transform: rotate(135deg); border-width: 6px; box-shadow: 0 0 80px var(--neon-cyan); }
-        .diamond-core-container:hover .diamond-layer-2 { transform: rotate(-45deg); border-color: var(--neon-gold); box-shadow: 0 0 40px var(--neon-gold);}
-        .diamond-core-container:hover .diamond-layer-3 { background: rgba(0, 240, 255, 0.5); transform: rotate(45deg) scale(0.7); }
-        .diamond-core-container:hover .data-ring { border-color: var(--neon-cyan); transform: scale(1.1); }
 
-        /* MAIN APP UI */
+        /* APP UI */
         #app-container { display: none; height: 100vh; width: 100vw; flex-direction: column; background: var(--bg-dark); position: relative; }
         
         header { 
@@ -145,7 +136,6 @@
         .ai-bubble.show { opacity: 1; transform: translateY(0); }
         .ai-avatar-wrapper { position: relative; cursor: pointer; pointer-events: auto; }
         .ai-avatar { width: 140px; height: auto; filter: drop-shadow(0 0 35px var(--neon-cyan)); animation: float-ai 4s ease-in-out infinite; object-fit: contain; }
-        .ai-ring { position: absolute; inset: -10px; border: 2px dashed var(--neon-cyan); border-radius: 50%; animation: spin-slow 10s linear infinite; opacity: 0.5; }
 
         .sop-stage { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 10; perspective: 1500px; }
         
@@ -160,74 +150,56 @@
         }
         .page.active { display: flex; animation: card-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-        /* CHAT PANEL */
         #ai-panel { position: fixed; inset: 0; background: rgba(2,4,10,0.95); backdrop-filter: blur(30px); z-index: 1000; display: none; flex-direction: column; }
         .chat-area { flex: 1; overflow-y: auto; padding: 2rem 1.5rem; display: flex; flex-direction: column; gap: 20px; }
         
         .chat-input-box { padding: 1.5rem; background: rgba(5,8,15,0.95); display: flex; gap: 15px; border-top: 1px solid rgba(0,240,255,0.3); padding-bottom: calc(1.5rem + env(safe-area-inset-bottom)); align-items: center; }
         .chat-input-box .mic-btn { background: rgba(0,240,255,0.1); border: 1px solid rgba(0,240,255,0.4); border-radius: 50%; width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
-        .chat-input-box .mic-btn:hover { background: rgba(0,240,255,0.3); box-shadow: 0 0 15px rgba(0,240,255,0.5); }
-        .chat-input-box .mic-btn.listening { background: rgba(255,61,188,0.3); border-color: var(--neon-pink); animation: pulse-mic 1s infinite; box-shadow: 0 0 20px var(--neon-pink); }
+        .chat-input-box .mic-btn.listening { background: rgba(255,61,188,0.3); border-color: var(--neon-pink); animation: pulse-mic 1s infinite; }
         
         .chat-input-box input { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,240,255,0.3); color: #fff; padding: 20px 25px; border-radius: 40px; outline: none; font-size: 1.15rem; transition: 0.3s; }
-        .chat-input-box input:focus { border-color: var(--neon-cyan); box-shadow: 0 0 25px rgba(0,240,255,0.2); background: rgba(255,255,255,0.1); }
-        .chat-input-box input::placeholder { transition: opacity 0.3s ease-in-out; opacity: 0.7; }
-        .chat-input-box .send-btn { background: var(--neon-cyan); color: black; font-weight: 900; width: 65px; height: 55px; display: flex; align-items: center; justify-content: center; border-radius: 30px; transition: 0.2s; box-shadow: 0 0 25px rgba(0,240,255,0.5); cursor: pointer; }
+        .chat-input-box .send-btn { background: var(--neon-cyan); color: black; font-weight: 900; width: 65px; height: 55px; display: flex; align-items: center; justify-content: center; border-radius: 30px; cursor: pointer; }
 
         .msg { padding: 20px 28px; border-radius: 30px; max-width: 85%; line-height: 1.7; font-size: 1.1rem; }
         .msg.bot { background: rgba(30, 41, 60, 0.6); align-self: flex-start; border-bottom-left-radius: 6px; border: 1px solid rgba(0,240,255,0.3); color: #ffffff; backdrop-filter: blur(15px); }
-        .msg.bot * { background: transparent !important; }
-        .msg.bot img { width: 100%; border-radius: 15px; margin-top: 10px; border: 2px solid var(--neon-cyan); box-shadow: 0 0 15px rgba(0,240,255,0.4); }
-        .msg.user { background: var(--neon-cyan); color: #000; font-weight: 900; align-self: flex-end; border-bottom-right-radius: 6px; box-shadow: 0 8px 25px rgba(0,240,255,0.3); }
+        .msg.bot img { width: 100%; border-radius: 15px; margin-top: 10px; border: 2px solid var(--neon-cyan); }
+        .msg.user { background: var(--neon-cyan); color: #000; font-weight: 900; align-self: flex-end; border-bottom-right-radius: 6px; }
         
-        .scan-bar { position: absolute; width: 100vw; height: 6px; background: #fff; box-shadow: 0 0 60px 15px var(--neon-cyan), 0 0 120px 30px var(--neon-pink); z-index: 10000; top: -100px; pointer-events: none; }
+        .scan-bar { position: absolute; width: 100vw; height: 6px; background: #fff; box-shadow: 0 0 60px 15px var(--neon-cyan); z-index: 10000; top: -100px; pointer-events: none; }
 
-        /* ADMIN DASHBOARD */
         #admin-panel { position: fixed; inset: 0; background: rgba(0,0,0,0.98); backdrop-filter: blur(50px); z-index: 2000; display: none; flex-direction: column; padding: 2rem; overflow-y: auto; }
         .admin-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--neon-cyan); padding-bottom: 1rem; margin-bottom: 1.5rem; }
-        .admin-title { font-family: 'Space Grotesk', sans-serif; color: var(--neon-cyan); font-size: 2rem; font-weight: 900; text-transform: uppercase; letter-spacing: 5px; text-shadow: 0 0 20px var(--neon-cyan); }
-        .admin-section { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.5rem; }
-        .admin-label { color: var(--neon-gold); font-weight: 900; letter-spacing: 2px; text-transform: uppercase; font-size: 0.9rem; }
-        .admin-textarea { width: 100%; height: 120px; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,240,255,0.3); border-radius: 15px; color: #fff; padding: 15px; font-family: 'Pyidaungsu', sans-serif; font-size: 1rem; outline: none; resize: none; transition: 0.3s; }
-        .admin-save-btn { background: var(--neon-cyan); color: black; font-weight: 900; padding: 15px 0; border-radius: 15px; text-transform: uppercase; letter-spacing: 3px; font-size: 1.1rem; box-shadow: 0 0 25px rgba(0,240,255,0.4); transition: 0.3s; cursor: pointer; text-align: center; margin-top: 1rem; }
+        .admin-title { font-family: 'Space Grotesk', sans-serif; color: var(--neon-cyan); font-size: 2rem; font-weight: 900; text-transform: uppercase; letter-spacing: 5px; }
+        .admin-textarea { width: 100%; height: 120px; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,240,255,0.3); border-radius: 15px; color: #fff; padding: 15px; font-size: 1rem; outline: none; resize: none; }
+        .admin-save-btn { background: var(--neon-cyan); color: black; font-weight: 900; padding: 15px 0; border-radius: 15px; text-align: center; cursor: pointer; margin-top: 1rem; }
 
-        /* MODALS */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(20px); z-index: 3000; display: none; align-items: center; justify-content: center; }
-        .pass-box { background: rgba(10,15,30,0.9); border: 2px solid var(--neon-cyan); border-radius: 20px; padding: 3rem; text-align: center; box-shadow: 0 0 40px rgba(0,240,255,0.2); transform: scale(0.9); transition: 0.3s; width: 90%; max-width: 400px; }
-        .pass-box.show { transform: scale(1); }
-        .pass-input { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--neon-cyan); color: white; padding: 15px 20px; border-radius: 10px; margin: 20px 0; outline: none; font-size: 1.2rem; text-align: center; letter-spacing: 2px; transition: 0.3s; }
-        .shake { animation: shake 0.5s; border-color: red !important; box-shadow: 0 0 20px rgba(255,0,0,0.5) !important; }
+        .pass-box { background: rgba(10,15,30,0.9); border: 2px solid var(--neon-cyan); border-radius: 20px; padding: 3rem; text-align: center; width: 90%; max-width: 400px; }
+        .pass-input { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--neon-cyan); color: white; padding: 15px 20px; border-radius: 10px; margin: 20px 0; text-align: center; }
+        .shake { animation: shake 0.5s; border-color: red !important; }
 
-        /* Keyframes */
-        @keyframes pulse-mic { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 50% { transform: translateX(10px); } 75% { transform: translateX(-10px); } }
         @keyframes spin-slow { 100% { transform: rotate(360deg); } }
         @keyframes spin-slow-reverse { 100% { transform: rotate(-360deg); } }
-        @keyframes float-core { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
         @keyframes grid-scroll { 0% { background-position: 0 0; } 100% { background-position: 0 80px; } }
-        @keyframes core-throb { 0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; } 50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.6; } }
-        @keyframes pulse-glow { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
-        @keyframes particle-drift { 0% { transform: translateY(110vh) translateZ(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(-10vh) translateZ(300px); opacity: 0; } }
-        @keyframes card-reveal { 0% { opacity: 0; transform: rotateX(15deg) translateY(80px) scale(0.9); } 100% { opacity: 1; transform: rotateX(0deg) translateY(0) scale(1); } }
-        @keyframes float-ai { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
-        @keyframes laser-scan { 0% { top: -10vh; opacity: 1; } 80% { opacity: 1; } 100% { top: 110vh; opacity: 0; } }
+        @keyframes particle-drift { 0% { transform: translateY(110vh) translateZ(0); opacity: 0; } 100% { transform: translateY(-10vh) translateZ(300px); opacity: 0; } }
+        @keyframes card-reveal { 0% { opacity: 0; transform: translateY(80px); } 100% { opacity: 1; transform: translateY(0); } }
+        @keyframes laser-scan { 0% { top: -10vh; } 100% { top: 110vh; } }
     </style>
 </head>
 <body>
 
     <audio id="chat-bgm" loop preload="auto"><source src="https://actions.google.com/sounds/v1/science_fiction/computer_data_processing.ogg" type="audio/ogg"></audio>
-
     <div id="scan-fx" class="scan-bar"></div>
 
-    <!-- MODALS -->
     <div id="password-modal" class="modal-overlay">
         <div class="pass-box" id="pass-box">
             <i data-lucide="lock" class="text-cyan-400 mx-auto mb-4" size="50"></i>
             <h2 class="text-cyan-400 font-black text-xl tracking-widest uppercase">Admin Authorization</h2>
             <input type="password" id="admin-pass-input" class="pass-input" placeholder="•••••••••" onkeypress="if(event.key === 'Enter') verifyAdmin()">
             <div class="flex gap-4 justify-center mt-2">
-                <button onclick="closePasswordModal()" class="px-6 py-2 rounded-lg border border-red-500 text-red-500 font-bold hover:bg-red-500/20 transition-all">Cancel</button>
-                <button onclick="verifyAdmin()" class="px-6 py-2 rounded-lg bg-cyan-500 text-black font-black hover:scale-105 transition-all">Unlock</button>
+                <button onclick="closePasswordModal()" class="px-6 py-2 rounded-lg border border-red-500 text-red-500 font-bold">Cancel</button>
+                <button onclick="verifyAdmin()" class="px-6 py-2 rounded-lg bg-cyan-500 text-black font-black">Unlock</button>
             </div>
         </div>
     </div>
@@ -235,16 +207,14 @@
     <div id="name-modal" class="modal-overlay">
         <div class="pass-box" id="name-box">
             <i data-lucide="user-check" class="text-cyan-400 mx-auto mb-4" size="50"></i>
-            <h2 class="text-cyan-400 font-black text-xl tracking-widest uppercase">Identity Link</h2>
             <input type="text" id="user-name-input" class="pass-input" placeholder="သင့်နာမည်ကို ရိုက်ထည့်ပါ..." onkeypress="if(event.key === 'Enter') submitName()">
             <div class="flex gap-4 justify-center mt-4">
-                <button onclick="closeNameModal()" class="px-6 py-2 rounded-lg border border-red-500 text-red-500 font-bold hover:bg-red-500/20 transition-all">Cancel</button>
-                <button onclick="submitName()" class="px-6 py-2 rounded-lg bg-cyan-500 text-black font-black hover:scale-105 transition-all">Access</button>
+                <button onclick="closeNameModal()" class="px-6 py-2 rounded-lg border border-red-500 text-red-500 font-bold">Cancel</button>
+                <button onclick="submitName()" class="px-6 py-2 rounded-lg bg-cyan-500 text-black font-black">Access</button>
             </div>
         </div>
     </div>
 
-    <!-- LANDING -->
     <div id="landing">
         <div class="horizon-glow"></div>
         <div class="cyber-floor" id="floor-fx"></div>
@@ -258,190 +228,163 @@
                 <i data-lucide="zap" class="text-white relative z-20" size="50"></i>
             </div>
             <div class="inline-block px-6 py-2 rounded-full mt-2">
-                <span class="text-cyan-400 font-black tracking-[0.4em] text-xs uppercase" style="text-shadow: 0 0 10px var(--neon-cyan);">Initialize System</span>
+                <span class="text-cyan-400 font-black tracking-[0.4em] text-xs uppercase">Initialize System</span>
             </div>
         </div>
     </div>
 
-    <!-- APP CONTAINER -->
     <div id="app-container">
         <header>
             <div class="flex items-center gap-5">
-                <img src="https://i.imgur.com/gAev5xH.png" alt="Logo" class="w-16 h-16 rounded-2xl border-2 border-cyan-400 shadow-[0_0_20px_rgba(0,240,255,0.4)]">
+                <img src="https://i.imgur.com/gAev5xH.png" alt="Logo" class="w-16 h-16 rounded-2xl border-2 border-cyan-400">
                 <div>
                     <div class="font-black text-base text-white tracking-[0.2em] uppercase">Live's Kabob</div>
                     <div class="text-[9px] text-cyan-400 font-bold uppercase tracking-[0.5em] mt-1">Neural Tata v11.8</div>
                 </div>
             </div>
             <div class="flex items-center gap-5">
-                <button onclick="emergencySOS()" class="bg-red-500/20 border border-red-500 text-red-500 px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-red-500 transition-all">SOS</button>
-                <button onclick="toggleMute()" class="p-4 bg-cyan-500/10 border border-cyan-400/30 rounded-full hover:bg-cyan-500/30 transition-all"><i data-lucide="volume-2" size="22" class="text-cyan-400" id="vol-icon"></i></button>
-                <button onclick="openPasswordModal()" class="p-4 bg-purple-500/10 border border-purple-400/30 rounded-full hover:bg-purple-500/30 transition-all"><i data-lucide="cpu" size="22" class="text-purple-400"></i></button>
+                <button onclick="emergencySOS()" class="bg-red-500/20 border border-red-500 text-red-500 px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest">SOS</button>
+                <button onclick="toggleMute()" class="p-4 bg-cyan-500/10 border border-cyan-400/30 rounded-full"><i data-lucide="volume-2" size="22" class="text-cyan-400" id="vol-icon"></i></button>
+                <button onclick="openPasswordModal()" class="p-4 bg-purple-500/10 border border-purple-400/30 rounded-full"><i data-lucide="cpu" size="22" class="text-purple-400"></i></button>
             </div>
         </header>
 
         <div class="ai-hub">
             <div class="ai-bubble" id="speak-bubble">မင်္ဂလာပါ'' တာတာ''အဆင်သင့်ရှိပါတယ်ရှင့် ✨</div>
             <div class="ai-avatar-wrapper" onclick="toggleAI()">
-                <div class="ai-ring"></div>
-                <img src="https://i.imgur.com/OTpyIVK.png" alt="Tata AI" class="ai-avatar" onerror="this.src='https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/bot.svg'">
+                <img src="https://i.imgur.com/OTpyIVK.png" alt="Tata AI" class="ai-avatar">
             </div>
         </div>
 
         <main class="sop-stage">
             <div id="sop-pages"></div>
             <div class="fixed bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-12 z-[200]">
-                <button onclick="changePage(-1)" class="w-20 h-20 rounded-full border-2 border-cyan-400 flex items-center justify-center text-cyan-400 hover:bg-cyan-400 hover:text-black transition-all bg-black/50 backdrop-blur-md shadow-[0_0_20px_rgba(0,240,255,0.2)]"><i data-lucide="chevron-left" size="42"></i></button>
-                <div id="page-indicator" class="text-cyan-400 font-black text-3xl tracking-[0.3em] min-w-[140px] text-center" style="text-shadow: 0 0 20px rgba(0,240,255,0.6);">1 / 15</div>
-                <button onclick="changePage(1)" class="w-20 h-20 rounded-full border-2 border-cyan-400 flex items-center justify-center text-cyan-400 hover:bg-cyan-400 hover:text-black transition-all bg-black/50 backdrop-blur-md shadow-[0_0_20px_rgba(0,240,255,0.2)]"><i data-lucide="chevron-right" size="42"></i></button>
+                <button onclick="changePage(-1)" class="w-20 h-20 rounded-full border-2 border-cyan-400 flex items-center justify-center text-cyan-400 bg-black/50"><i data-lucide="chevron-left" size="42"></i></button>
+                <div id="page-indicator" class="text-cyan-400 font-black text-3xl tracking-[0.3em] min-w-[140px] text-center">1 / 15</div>
+                <button onclick="changePage(1)" class="w-20 h-20 rounded-full border-2 border-cyan-400 flex items-center justify-center text-cyan-400 bg-black/50"><i data-lucide="chevron-right" size="42"></i></button>
             </div>
         </main>
     </div>
 
-    <!-- AI CHAT PANEL -->
     <div id="ai-panel">
-        <header class="p-8 flex justify-between border-b border-cyan-400/50 items-center bg-transparent backdrop-blur-3xl">
+        <header class="p-8 flex justify-between border-b border-cyan-400/50 items-center">
             <div class="flex items-center gap-6">
                 <div class="w-24 h-24 bg-white/5 rounded-3xl flex items-center justify-center border border-cyan-400/50">
-                    <img src="https://i.imgur.com/OTpyIVK.png" class="w-full h-full object-contain filter drop-shadow-2xl">
+                    <img src="https://i.imgur.com/OTpyIVK.png" class="w-full h-full object-contain">
                 </div>
                 <div>
                     <div class="font-black text-cyan-400 tracking-widest text-3xl uppercase leading-none">TATA v11.8</div>
                     <div class="text-[11px] text-green-400 font-bold tracking-[0.8em] uppercase mt-3" id="user-linked-text">Identity Core Linked</div>
                 </div>
             </div>
-            <button onclick="closeChatPanel()"><i data-lucide="x" class="text-white hover:text-cyan-400 transition-colors" size="55"></i></button>
+            <button onclick="closeChatPanel()"><i data-lucide="x" class="text-white" size="55"></i></button>
         </header>
         <div class="chat-area" id="chat-box"></div>
         <div id="typing-box" class="px-12 py-4 text-sm text-cyan-400 italic hidden flex items-center gap-3 font-bold"><span class="w-3 h-3 bg-cyan-400 rounded-full animate-ping"></span> Thinking... ✨</div>
         <div class="chat-input-box">
             <button id="mic-btn" class="mic-btn" onclick="toggleVoiceInput()"><i data-lucide="mic" size="24" class="text-cyan-400"></i></button>
-            <input type="text" id="ai-input" placeholder="ရောင်းအား အခြေအနေ ဘယ်လိုလဲ...">
+            <input type="text" id="ai-input" placeholder="အမိန့်ပေးပါ ကိုတုတ်...">
             <div class="send-btn" onclick="sendQuery()"><i data-lucide="sparkles" size="28"></i></div>
         </div>
     </div>
 
-    <!-- ADMIN PANEL -->
     <div id="admin-panel">
         <div class="admin-header"><h1 class="admin-title">Neural Core Dashboard</h1><button onclick="closeAdmin()"><i data-lucide="x" class="text-white" size="40"></i></button></div>
-        <div class="admin-section"><label class="admin-label">Brain Rules</label><textarea id="admin-rules" class="admin-textarea" placeholder="ဥပမာ - မင်းဆိုတဲ့စကားလုံး လုံးဝမသုံးရ။"></textarea></div>
-        <div class="admin-section"><label class="admin-label" style="color: var(--neon-pink);">Live Menu & Data</label><textarea id="admin-data" class="admin-textarea" style="border-color: rgba(255,61,188,0.3);" placeholder="ဥပမာ - Signature ကင် ၃ မျိုးပဲရတော့မည်။"></textarea></div>
-        <div class="admin-section"><label class="admin-label" style="color: var(--neon-cyan);">Floating Thoughts</label><textarea id="admin-bubbles" class="admin-textarea" style="border-color: rgba(0,240,255,0.3); height: 80px;" placeholder="တစ်ကြောင်းချင်းစီ ခွဲရေးပေးပါ။"></textarea></div>
-        <div class="admin-section"><label class="admin-label" style="color: #A855F7;">Visual Memory (Photo links)</label><textarea id="admin-files" class="admin-textarea" style="border-color: rgba(168,85,247,0.4); height: 80px;" placeholder="🔗 ပုံလင့်ခ်များကို ဤနေရာတွင် ထည့်သွင်းပါ။"></textarea></div>
+        <div class="admin-section"><label class="text-yellow-400 text-xs font-black uppercase">Brain Rules</label><textarea id="admin-rules" class="admin-textarea"></textarea></div>
+        <div class="admin-section"><label class="text-pink-400 text-xs font-black uppercase">Live Menu & Data</label><textarea id="admin-data" class="admin-textarea"></textarea></div>
         <div class="admin-save-btn" onclick="saveAdminData()">Inject to Neural Core <i data-lucide="upload-cloud" class="inline ml-2"></i></div>
     </div>
 
     <script>
         lucide.createIcons();
         let curPage = 0; let isMuted = false; let isChatting = false; let currentUserName = ""; let isAppActive = false;
-        const apiKey = ""; 
 
-        // Particle System
         function generateDust() {
             const container = document.getElementById('dust-layer');
-            if(!container) return;
-            const colors = ['var(--neon-cyan)', 'var(--neon-pink)', '#ffffff', 'var(--neon-gold)'];
-            for (let i = 0; i < 80; i++) {
+            for (let i = 0; i < 60; i++) {
                 const dot = document.createElement('div');
                 dot.className = 'glow-dust';
-                const size = Math.random() * 6 + 2;
-                dot.style.width = `${size}px`;
-                dot.style.height = `${size}px`;
+                dot.style.width = `${Math.random() * 4 + 2}px`;
+                dot.style.height = dot.style.width;
                 dot.style.left = `${Math.random() * 100}%`;
-                dot.style.animationDelay = `${Math.random() * 20}s`;
-                dot.style.animationDuration = `${Math.random() * 8 + 8}s`;
-                dot.style.color = colors[Math.floor(Math.random() * colors.length)];
-                dot.style.background = dot.style.color;
+                dot.style.animationDelay = `${Math.random() * 10}s`;
+                dot.style.background = 'var(--neon-cyan)';
                 container.appendChild(dot);
             }
         }
 
-        // 10-Second Random Robotic Bird Sounds
-        const robotBirds = ["https://actions.google.com/sounds/v1/science_fiction/robot_code.ogg", "https://actions.google.com/sounds/v1/science_fiction/robot_code_2.ogg", "https://actions.google.com/sounds/v1/science_fiction/beep_short.ogg", "https://actions.google.com/sounds/v1/science_fiction/digital_beeps.ogg", "https://actions.google.com/sounds/v1/science_fiction/machine_scan.ogg", "https://actions.google.com/sounds/v1/science_fiction/robot_code_3.ogg", "https://actions.google.com/sounds/v1/science_fiction/robot_code_4.ogg", "https://actions.google.com/sounds/v1/science_fiction/robot_code_5.ogg", "https://actions.google.com/sounds/v1/science_fiction/sci_fi_beep.ogg", "https://actions.google.com/sounds/v1/science_fiction/space_swoosh.ogg"];
-        function playRoboticBird() { if(isMuted || isChatting || !isAppActive) return; const audio = new Audio(robotBirds[Math.floor(Math.random() * robotBirds.length)]); audio.volume = 0.4; audio.play().catch(()=>{}); }
-
-        // Dynamic Placeholders
-        const dynamicPlaceholders = ["ဒီနေ့ရောင်းအား အခြေအနေ ဘယ်လိုလဲ...", "SOP အချက်တွေကို သုံးသပ်မယ်...", "Top Selling Menu တွေ အစီရင်ခံပါ...", "အမိန့်ပေးပါ ကိုတုတ်..."];
-        let placeholderIndex = 0;
-        setInterval(() => { const i = document.getElementById('ai-input'); if (i && document.activeElement !== i && i.value === '') { placeholderIndex = (placeholderIndex + 1) % dynamicPlaceholders.length; i.setAttribute('placeholder', dynamicPlaceholders[placeholderIndex]); } }, 3500);
-
-        // Voice Recognition (STT)
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        let recognition;
-        if (SpeechRecognition) {
-            recognition = new SpeechRecognition(); recognition.lang = 'my-MM';
-            recognition.onstart = () => document.getElementById('mic-btn').classList.add('listening');
-            recognition.onresult = (e) => document.getElementById('ai-input').value = e.results[0][0].transcript;
-            recognition.onend = () => document.getElementById('mic-btn').classList.remove('listening');
-        }
-        function toggleVoiceInput() { if(recognition) { if(document.getElementById('mic-btn').classList.contains('listening')) recognition.stop(); else recognition.start(); } }
-
-        // Persistence
-        document.addEventListener("DOMContentLoaded", () => {
-            const r = localStorage.getItem("tata_brain_rules"), d = localStorage.getItem("tata_brain_data"), f = localStorage.getItem("tata_brain_files"), b = localStorage.getItem("tata_brain_bubbles");
-            if(r) document.getElementById('admin-rules').value = r;
-            if(d) document.getElementById('admin-data').value = d;
-            if(f) document.getElementById('admin-files').value = f;
-            if(b) document.getElementById('admin-bubbles').value = b;
-        });
-
-        // Identity & Chat
-        function toggleAI() { if(isChatting) closeChatPanel(); else if(!currentUserName) openNameModal(); else openChatPanel(); }
-        function openNameModal() { document.getElementById('name-modal').style.display = 'flex'; setTimeout(()=>document.getElementById('name-box').classList.add('show'),10); }
-        function closeNameModal() { document.getElementById('name-box').classList.remove('show'); setTimeout(()=>document.getElementById('name-modal').style.display='none',300); }
-        function submitName() { const val = document.getElementById('user-name-input').value.trim(); if(val) { currentUserName = val; document.getElementById('user-linked-text').textContent = `Linked to: ${val}`; closeNameModal(); openChatPanel(); } else document.getElementById('name-box').classList.add('shake'); }
-        function openChatPanel() { document.getElementById('ai-panel').style.display = 'flex'; isChatting = true; document.getElementById('chat-bgm').play().catch(()=>{}); if(document.getElementById('chat-box').children.length === 0) addBotMessage(currentUserName === "ကိုတုတ်" ? "မင်္ဂလာပါ ကိုတုတ်.. တာတာ အဆင်သင့်ရှိပါတယ်ရှင့်။" : `မင်္ဂလာပါ ${currentUserName}.. ဘာအကူအညီပေးရမလဲရှင့်?`); }
-        function closeChatPanel() { document.getElementById('ai-panel').style.display = 'none'; isChatting = false; document.getElementById('chat-bgm').pause(); }
-
-        // Admin Security
-        function openPasswordModal() { document.getElementById('password-modal').style.display = 'flex'; setTimeout(()=>document.getElementById('pass-box').classList.add('show'),10); }
-        function closePasswordModal() { document.getElementById('pass-box').classList.remove('show'); setTimeout(()=>document.getElementById('password-modal').style.display='none',300); }
-        function verifyAdmin() { const i = document.getElementById('admin-pass-input'); if(i.value === '@admin$103') { closePasswordModal(); document.getElementById('admin-panel').style.display='flex'; closeChatPanel(); } else document.getElementById('pass-box').classList.add('shake'); }
-        function closeAdmin() { document.getElementById('admin-panel').style.display = 'none'; }
-        function saveAdminData() { localStorage.setItem("tata_brain_rules", document.getElementById('admin-rules').value); localStorage.setItem("tata_brain_data", document.getElementById('admin-data').value); localStorage.setItem("tata_brain_files", document.getElementById('admin-files').value); localStorage.setItem("tata_brain_bubbles", document.getElementById('admin-bubbles').value); closeAdmin(); }
-
-        // 3D Parallax & FX
         document.addEventListener('mousemove', (e) => {
             const x = (window.innerWidth / 2 - e.pageX) / 40, y = (window.innerHeight / 2 - e.pageY) / 40;
-            const l = document.getElementById('landing'), b = document.getElementById('parallax-bg'), f = document.getElementById('floor-fx');
+            const l = document.getElementById('landing'), b = document.getElementById('parallax-bg');
             if(l) l.style.transform = `rotateY(${-x}deg) rotateX(${y}deg)`;
             if(b) b.style.transform = `translateX(${x*1.5}px) translateY(${y*1.5}px) translateZ(50px)`;
-            if(f) f.style.transform = `perspective(1200px) rotateX(75deg) translateZ(-150px) translateX(${x}px)`;
         });
 
         function triggerScan() { document.getElementById('scan-fx').style.animation = 'laser-scan 0.8s forwards'; setTimeout(initApp, 600); }
-        function initApp() { document.getElementById('landing').style.display = 'none'; document.getElementById('app-container').style.display = 'flex'; buildSOP(); isAppActive = true; setInterval(playRoboticBird, 10000); startPersonality(); }
+        function initApp() { document.getElementById('landing').style.display = 'none'; document.getElementById('app-container').style.display = 'flex'; buildSOP(); isAppActive = true; startPersonality(); }
 
-        const sopData = [{ t: "မဟာဗျူဟာ", c: "Live's ကို Premium Restaurant အဖြစ် ကူးပြောင်းမည်။" },{ t: "ရဲဘော် ၂၂ ဦး", c: "စီမံ (၃)၊ မီးဖို (၈)၊ အကင် (၄)၊ ဝန်ဆောင်မှု (၆)၊ ပံ့ပိုးရေး (၁)။" },{ t: "Battle-Ready", c: "မနက် ၈:၄၅ ရောက်ရမည်။ ၉:၀၀ အသင့်ဖြစ်ရမည်။" },{ t: "ဖုန်းတင်းကျပ်မှု", c: "ညနေ ၃ နာရီမှ ၉ နာရီအထိ ဖုန်းမသုံးရ။" },{ t: "၇ စက္ကန့် စံနှုန်း", c: "ဧည့်သည်ရောက်လျှင် ၇ စက္ကန့်အတွင်း နှုတ်ဆက်ပါ။" },{ t: "ကြိုတင်လုပ်ဆောင်မှု", c: "တစ်ရှူးနှင့် ရေကို ဧည့်သည်မတောင်းခင် ကြိုဖြည့်ပါ။" },{ t: "Final Wipe", c: "ဟင်းပွဲမထွက်ခင် ပန်းကန်ဘောင်ကို တစ်ရှူးဖြူဖြင့် သုတ်ပါ။" },{ t: "၃ စက္ကန့် စစ်ဆေးမှု", c: "အနံ့၊ အရောင်၊ အပူချိန်ကို ၃ စက္ကန့်အတွင်း စစ်ပါ။" },{ t: "တစ်ကိုယ်ရည်သန့်ရှင်းမှု", c: "လက်ကို စက္ကန့် ၂၀ ဆေးပါ။ စဉ်းတီတုံးအရောင်ခွဲသုံးပါ။" },{ t: "L.A.S.T System", c: "Listen, Apologize, Solve, Thank ကိုသုံးပါ။" },{ t: "ရိုးသားမှု", c: "Tips Box ထဲသို့ Tips အားလုံးထည့်ပါ။" },{ t: "သန့်ရှင်းရေး အလှည့်", c: "Cleaning Squad အလှည့်ကျ သန့်ရှင်းရေးလုပ်ပါ။" },{ t: "Content Standards", c: "Boss ဗီဒီယိုရိုက်နေစဉ် ပုံမှန်အလုပ်လုပ်ပါ။" },{ t: "Sobriety", c: "အရက်၊ ဆေးလိပ်၊ ကွမ်းနံ့ လုံးဝမရှိစေရ။" },{ t: "God Staff", c: "အကောင်းဆုံးဝန်ထမ်းကို လစဉ်ဆုချီးမြှင့်မည်။" }];
-        function buildSOP() { const c = document.getElementById('sop-pages'); c.innerHTML = ''; sopData.forEach((item, i) => { const div = document.createElement('div'); div.className = `page ${i===curPage?'active':''}`; div.innerHTML = `<div class="mb-10 flex items-center"><span style="background:var(--neon-gold); color:black; font-weight:900; padding:5px 12px; border-radius:8px; font-size:0.9rem; text-transform:uppercase; margin-right:15px; box-shadow: 0 0 15px rgba(255,230,0,0.6);">God Level</span><span class="bg-cyan-500/20 text-cyan-400 px-6 py-2.5 rounded-full text-xs font-black uppercase border border-cyan-400/40">Protocol ${i+1}</span></div><h1 class="text-cyan-400 font-black text-5xl mb-12 border-l-8 border-pink-500 pl-8 uppercase leading-tight">${item.t}</h1><div class="text-slate-100 text-3xl leading-relaxed font-bold">${item.c}</div><div class="mt-auto opacity-10 flex justify-center"><i data-lucide="crown" size="160"></i></div>`; c.appendChild(div); }); lucide.createIcons(); }
+        const sopData = [{ t: "မဟာဗျူဟာ", c: "Live's ကို Premium Restaurant အဖြစ် ကူးပြောင်းမည်။" },{ t: "ရဲဘော် ၂၂ ဦး", c: "စီမံ (၃)၊ မီးဖို (၈)၊ အကင် (၄)၊ ဝန်ဆောင်မှု (၆)၊ ပံ့ပိုးရေး (၁)။" },{ t: "Battle-Ready", c: "မနက် ၈:၄၅ ရောက်ရမည်။ ၉:၀၀ အသင့်ဖြစ်ရမည်။" },{ t: "ဖုန်းတင်းကျပ်မှု", c: "ညနေ ၃ နာရီမှ ၉ နာရီအထိ ဖုန်းမသုံးရ။" },{ t: "၇ စက္ကန့် စံနှုန်း", c: "ဧည့်သည်ရောက်လျှင် ၇ စက္ကန့်အတွင်း နှုတ်ဆက်ပါ။" },{ t: "Final Wipe", c: "ဟင်းပွဲမထွက်ခင် ပန်းကန်ဘောင်ကို တစ်ရှူးဖြူဖြင့် သုတ်ပါ။" },{ t: "၃ စက္ကန့် စစ်ဆေးမှု", c: "အနံ့၊ အရောင်၊ အပူချိန်ကို ၃ စက္ကန့်အတွင်း စစ်ပါ။" }];
         
-        // Corrected changePage function: Changed 'pages' to 'p' to fix ReferenceError
+        function buildSOP() { 
+            const c = document.getElementById('sop-pages'); 
+            c.innerHTML = ''; 
+            sopData.forEach((item, i) => { 
+                const div = document.createElement('div'); 
+                div.className = `page ${i===curPage?'active':''}`; 
+                div.innerHTML = `<h1 class="text-cyan-400 font-black text-5xl mb-12 border-l-8 border-pink-500 pl-8 uppercase">${item.t}</h1><div class="text-slate-100 text-3xl font-bold">${item.c}</div>`; 
+                c.appendChild(div); 
+            }); 
+            lucide.createIcons(); 
+        }
+
         function changePage(dir) { 
             const p = document.querySelectorAll('.page'); 
-            if (p.length === 0) return;
             p[curPage].classList.remove('active'); 
             curPage = (curPage + dir + p.length) % p.length; 
             p[curPage].classList.add('active'); 
             document.getElementById('page-indicator').textContent = `${curPage + 1} / ${sopData.length}`; 
         }
-        
-        function toggleMute() { isMuted = !isMuted; document.getElementById('vol-icon').setAttribute('data-lucide', isMuted ? 'volume-x' : 'volume-2'); lucide.createIcons(); }
 
-        // AI Core Logic
-        function addBotMessage(txt) { 
-            const chat = document.getElementById('chat-box');
-            const b = document.createElement('div'); 
-            b.className = 'msg bot'; 
-            b.innerHTML = `<div>${txt}</div>`; 
-            chat.appendChild(b); 
-            chat.scrollTop = chat.scrollHeight; 
+        function toggleAI() { if(!currentUserName) openNameModal(); else openChatPanel(); }
+        function openNameModal() { document.getElementById('name-modal').style.display = 'flex'; }
+        function closeNameModal() { document.getElementById('name-modal').style.display='none'; }
+        function submitName() { const val = document.getElementById('user-name-input').value.trim(); if(val) { currentUserName = val; document.getElementById('user-linked-text').textContent = `Linked: ${val}`; closeNameModal(); openChatPanel(); } }
+        
+        function openChatPanel() { document.getElementById('ai-panel').style.display = 'flex'; isChatting = true; document.getElementById('chat-bgm').play().catch(()=>{}); }
+        function closeChatPanel() { document.getElementById('ai-panel').style.display = 'none'; isChatting = false; document.getElementById('chat-bgm').pause(); }
+
+        function openPasswordModal() { document.getElementById('password-modal').style.display = 'flex'; }
+        function closePasswordModal() { document.getElementById('password-modal').style.display='none'; }
+        function verifyAdmin() { if(document.getElementById('admin-pass-input').value === '@admin$103') { closePasswordModal(); document.getElementById('admin-panel').style.display='flex'; } else document.getElementById('pass-box').classList.add('shake'); }
+        function closeAdmin() { document.getElementById('admin-panel').style.display = 'none'; }
+        
+        function saveAdminData() { localStorage.setItem("tata_rules", document.getElementById('admin-rules').value); closeAdmin(); }
+
+        // --- BRIDGE INTEGRATION (အရေးကြီးဆုံးအပိုင်း) ---
+        async function callAI(p) {
+            const rules = localStorage.getItem("tata_rules") || "", 
+                  data = localStorage.getItem("tata_data") || "";
+            const sys = `You are တာတာ (Tata), AI Manager for Live's Kabob. Boss is ကိုတုတ်. Current user: ${currentUserName}. Tone: Ultra-concise, professional. Rules: ${rules}. Data: ${data}`;
+            
+            try { 
+                // Google Direct URL အစား ကျွန်တော်တို့ဆောက်ထားတဲ့ Bridge API ကို သုံးထားပါတယ်
+                const r = await fetch('/api/chat', { 
+                    method: 'POST', 
+                    headers: {'Content-Type': 'application/json'}, 
+                    body: JSON.stringify({ 
+                        contents: [{parts: [{text: p}]}], 
+                        systemInstruction: {parts: [{text: sys}]} 
+                    }) 
+                }); 
+                const d = await r.json(); 
+                return d.candidates?.[0]?.content?.parts?.[0]?.text || "နားမလည်ပါရှင့်။"; 
+            } catch(e) { return "Bridge Error."; }
         }
+
         async function sendQuery() { 
             const i = document.getElementById('ai-input'), q = i.value.trim(); 
             if(!q) return; 
-            const u = document.createElement('div'); 
-            u.className = 'msg user'; 
-            u.textContent = q; 
+            const u = document.createElement('div'); u.className = 'msg user'; u.textContent = q; 
             document.getElementById('chat-box').appendChild(u); 
             i.value = ''; 
             document.getElementById('chat-box').scrollTop = document.getElementById('chat-box').scrollHeight; 
@@ -450,45 +393,22 @@
             document.getElementById('typing-box').classList.add('hidden'); 
             addBotMessage(res); 
         }
-        async function callAI(p) {
-            const rules = localStorage.getItem("tata_brain_rules") || "", data = localStorage.getItem("tata_brain_data") || "", files = localStorage.getItem("tata_brain_files") || "";
-            const sys = `You are 'တာတာ' (Tata), the Executive AI Manager for Live's Kabob. Current user: ${currentUserName}. Boss is 'ကိုတုတ်'. NEVER use 'မင်း'. You reply with TEXT and HTML only. Tone: Ultra-concise (15 words max). IMAGES: If user asks for photos/files, scan [FILE MEMORY] for any URLs and append: <br><img src="THE_URL" style="width:100%; border-radius:15px; margin-top:10px; border:2px solid var(--neon-cyan);">. DO NOT just list the link text. \n\n[BRAIN RULES]: ${rules}\n[LIVE DATA]: ${data}\n[FILE MEMORY]: ${files}`;
-            try { 
-                const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, { 
-                    method:'POST', 
-                    headers:{'Content-Type':'application/json'}, 
-                    body:JSON.stringify({ 
-                        contents:[{parts:[{text:p}]}], 
-                        systemInstruction:{parts:[{text:sys}]} 
-                    }) 
-                }); 
-                const d = await r.json(); 
-                return d.candidates?.[0]?.content?.parts?.[0]?.text || "နားမလည်ပါရှင့်။"; 
-            } catch(e) { 
-                return "Link Error."; 
-            }
+
+        function addBotMessage(txt) { 
+            const b = document.createElement('div'); b.className = 'msg bot'; b.innerHTML = txt; 
+            document.getElementById('chat-box').appendChild(b); 
+            document.getElementById('chat-box').scrollTop = document.getElementById('chat-box').scrollHeight; 
         }
+
         function startPersonality() { 
             setInterval(() => { 
                 if(isChatting) return; 
-                let list = ["ကိုတုတ်ရေ... အသင့်ပါပဲ ❤️", "Final Wipe စစ်ပြီးပြီလား ✨"]; 
-                const c = localStorage.getItem("tata_brain_bubbles"); 
-                if(c) list = c.split('\n').filter(t => t.trim() !== ''); 
                 const b = document.getElementById('speak-bubble'); 
-                if(list.length > 0) {
-                    b.textContent = list[Math.floor(Math.random()*list.length)]; 
-                    b.classList.add('show'); 
-                    setTimeout(() => b.classList.remove('show'), 9000); 
-                }
-            }, 35000); 
+                b.classList.add('show'); setTimeout(() => b.classList.remove('show'), 6000); 
+            }, 30000); 
         }
-        function emergencySOS() { if(!currentUserName) { openNameModal(); return; } toggleAI(); addBotMessage(`${currentUserName}... SOS Mode! အစားထိုးဖို့ စီစဉ်ရမလား? 🆘`); }
-        document.getElementById('ai-input').addEventListener("keypress", (e) => { if(e.key === "Enter") sendQuery(); });
-        
-        window.onload = () => { 
-            generateDust(); 
-            lucide.createIcons(); 
-        };
+
+        window.onload = generateDust;
     </script>
 </body>
 </html>
