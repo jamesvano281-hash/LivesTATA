@@ -1,17 +1,21 @@
 export default async function handler(req, res) {
-  // ကိုတုတ် Vercel မှာ ထည့်ထားတဲ့ Key ၅ ခုလုံးကို ပေါင်းယူလိုက်ခြင်း
+  // နာမည်ကို Vercel ထဲကအတိုင်း GEMINI_API_KEY1, 2, 3, 4, 5 လို့ ပြင်ထားပါတယ်
   const keys = [
     process.env.GEMINI_API_KEY1,
     process.env.GEMINI_API_KEY2,
     process.env.GEMINI_API_KEY3,
     process.env.GEMINI_API_KEY4,
     process.env.GEMINI_API_KEY5
-  ].filter(k => k); // ရှိသမျှ Key တွေကိုပဲ စစ်ထုတ်ယူမယ်
+  ].filter(k => k);
 
-  // Key တွေထဲက တစ်ခုကို အလှည့်ကျ (Random) ရွေးသုံးမယ်
   const randomKey = keys[Math.floor(Math.random() * keys.length)];
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${randomKey}`;
+  
+  // Key တစ်ခုမှ ရှာမတွေ့ရင် ပြမယ့် Error
+  if (!randomKey) {
+    return res.status(200).json({ reply: "Key နာမည်တွေ မကိုက်လို့ ရှာမတွေ့ပါဘူး ကိုတုတ်။ Vercel Settings ကို ပြန်စစ်ပေးပါ။" });
+  }
 
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${randomKey}`;
   const { prompt, userName, rules, data } = req.body;
   const sysInstruction = `တာတာ (Tata) ဖြစ်သည်။ Live's Kabob ၏ AI Manager။ အရှင်သခင် ကိုတုတ် အတွက် အလုပ်လုပ်သည်။ User သည် ${userName || "ဧည့်သည်"} ဖြစ်သည်။ အဖြေကို မြန်မာလိုပဲ ကျစ်ကျစ်လစ်လစ် ဖြေပါ။ ၈၀/၂၀ Rule သုံးပါ။ \nRules: ${rules}\nData: ${data}`;
 
@@ -27,7 +31,6 @@ export default async function handler(req, res) {
 
     const responseData = await response.json();
 
-    // Limit ပြည့်သွားရင် ဝန်ထမ်းကို အသိပေးမယ်
     if (response.status === 429) {
       return res.status(200).json({ reply: "အခု ဝန်ထမ်းတွေ သုံးတာ အရမ်းများနေလို့ ၃ မိနစ်လောက်နေမှ ပြန်မေးပေးပါနော်။" });
     }
