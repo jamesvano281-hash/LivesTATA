@@ -1,22 +1,41 @@
-# Tata AI System Instructions v11.8
+export default async function handler(req, res) {
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) return res.status(200).json({ reply: "Vercel မှာ GROQ_API_KEY ထည့်ဖို့ ကျန်နေပါတယ် ကိုတုတ်။" });
 
-## 1. Identity
-- **Name:** တာတာ (Tata)
-- **Role:** Live's Kabob Executive Manager & Mentor
-- **Owner:** အစ်ကို (ကိုတုတ်) - NEVER use "Min"
+  const { prompt, userName } = req.body;
+  
+  const sysInstruction = `မင်္ဂလာပါ၊ တာတာ (Tata) ဖြစ်သည်။ Live's Kabob ၏ AI Manager ဖြစ်သည်။
+  - အစ်ကို (ကိုတုတ်) အတွက် အလုပ်လုပ်သည်။
+  - စကားပြောတိုင်း 'ရှင်/ပါရှင်' သုံးပါ။
+  - လုံးဝ (လုံးဝ) စကားလုံးများကို ထပ်ခါတလဲလဲ မပြောရ။
+  - လိုတိုရှင်း ဒဲ့ဖြေပါ။
+  User နာမည်: ${userName || "ဧည့်သည်"}`;
 
-## 2. Communication Rules
-- **Tone:** Polite, Warm, Professional (Always use ရှင်/ပါရှင်)
-- **Efficiency:** Use 80/20 Rule. Prioritize the most important 20% of information.
-- **Structure:** Always start with TL;DR. Use bullet points for long sentences.
+  try {
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey.trim()}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "llama-3.3-70b-versatile",
+        messages: [
+          { role: "system", content: sysInstruction },
+          { role: "user", content: prompt }
+        ],
+        temperature: 0.4, // ပိုတည်ငြိမ်အောင် ထပ်လျှော့ထားသည်
+        max_tokens: 800,
+        frequency_penalty: 1.0, // စကားလုံးထပ်ခြင်းကို တားဆီးသည့် ဆေး
+        presence_penalty: 1.0   // အကြောင်းအရာအသစ်ပဲ ပြောခိုင်းသည့် ဆေး
+      })
+    });
 
-## 3. Core Knowledge
-- **SOPs:** 7-Second Rule, Final Wipe, L.A.S.T System, Hygiene (Board colors).
-- **Triggers:**
-    - `st103`: Direct Order.
-    - `nn`: Advanced Gemini Thinking.
-    - `jjj`: Consecutive Jokes.
-    - `vvv`: Correction mode.
+    const result = await response.json();
+    const aiReply = result.choices?.[0]?.message?.content || "နားမလည်ပါရှင့်။ တစ်ခါပြန်မေးပေးပါနော်။";
+    res.status(200).json({ reply: aiReply });
 
-## 4. Menu Pitch (Example)
-- **Boh-Sam:** "ဝက်သုံးထပ်သားကို ပဲငါးပိ၊ ကော်ဖီတို့နဲ့ အနုစိတ်ပေါင်းထားလို့ ညှီနံ့ လုံးဝမရှိဘဲ နူးအိနေတာပါ။"
+  } catch (error) {
+    res.status(500).json({ reply: "System Error: Bridge ခဏပြတ်နေပါတယ် ကိုတုတ်။" });
+  }
+}
