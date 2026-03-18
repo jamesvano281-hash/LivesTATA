@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Live's Kabob - Neural Tata v11.8 (Ultimate Core)</title>
+    <title>Live's Kabob - Neural Tata v11.9 (Stable Core)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -28,6 +28,7 @@
             perspective: 2000px;
         }
 
+        /* LANDING & FX */
         #landing { 
             position: fixed; inset: 0; z-index: 9999; 
             background: var(--bg-dark);
@@ -35,7 +36,6 @@
             transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
             overflow: hidden;
             padding: 8vh 0;
-            transform-style: preserve-3d;
         }
 
         .landing-bg {
@@ -44,7 +44,6 @@
             filter: brightness(0.9) contrast(1.15);
             z-index: 3;
             transform: translateZ(50px);
-            transition: transform 0.1s linear;
         }
 
         .cyber-floor {
@@ -53,362 +52,283 @@
                 linear-gradient(rgba(0, 240, 255, 0.3) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0, 240, 255, 0.3) 1px, transparent 1px);
             background-size: 80px 80px;
-            transform: perspective(1200px) rotateX(75deg) translateZ(-150px);
+            transform: perspective(1200px) rotateX(75deg);
             animation: grid-scroll 3s linear infinite;
             z-index: 1;
-            mask-image: linear-gradient(to top, rgba(0,0,0,1) 15%, transparent 70%);
-            -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 15%, transparent 70%);
+            opacity: 0.5;
         }
         
-        .horizon-glow {
-            position: absolute; bottom: 38vh; left: -20vw; right: -20vw; height: 2px;
-            background: var(--neon-cyan);
-            box-shadow: 0 0 50px 15px var(--neon-cyan), 0 0 100px 30px var(--neon-pink);
-            z-index: 2; opacity: 0.6;
-            transform: translateZ(-80px);
-        }
+        @keyframes grid-scroll { 0% { background-position: 0 0; } 100% { background-position: 0 80px; } }
 
-        #landing::before { 
-            content: ''; position: absolute; inset: 0; 
-            background: radial-gradient(circle at center, transparent 20%, rgba(2,4,10,0.95) 100%); 
-            z-index: 4; pointer-events: none;
-        }
+        .scan-bar { position: absolute; width: 100vw; height: 6px; background: #fff; box-shadow: 0 0 50px var(--neon-cyan); z-index: 10000; top: -100px; }
 
-        .chest-core {
-            position: absolute; top: 45%; left: 50%;
-            transform: translate(-50%, -50%) translateZ(80px);
-            width: 550px; height: 550px;
-            background: radial-gradient(circle, rgba(0,240,255,0.3) 0%, transparent 60%);
-            z-index: 5; mix-blend-mode: screen; pointer-events: none;
-            animation: core-throb 2.5s ease-in-out infinite;
-        }
-
-        .particle-box { position: absolute; inset: 0; z-index: 6; pointer-events: none; transform: translateZ(120px); }
-        .glow-dust { 
-            position: absolute; border-radius: 50%; background: #fff; opacity: 0; 
-            animation: particle-drift 10s linear infinite; 
-            box-shadow: 0 0 15px 2px currentColor; 
-        }
-        
-        .premium-unlock-container {
-            position: relative; z-index: 100;
-            display: flex; flex-direction: column; align-items: center;
-            margin-bottom: 5vh;
-            transform-style: preserve-3d;
-            animation: float-core 5s ease-in-out infinite;
-        }
-
-        .diamond-core-container {
-            position: relative; width: 140px; height: 140px; margin-bottom: 2vh;
-            display: flex; justify-content: center; align-items: center;
-            cursor: pointer; transform-style: preserve-3d; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .data-ring {
-            position: absolute; inset: -25px; border: 2px dashed rgba(0,240,255,0.4); border-radius: 50%;
-            animation: spin-slow 15s linear infinite; pointer-events: none;
-        }
-        .diamond-layer-1, .diamond-layer-2, .diamond-layer-3 {
-            position: absolute; inset: 0; border: 2px solid transparent; transform: rotate(45deg); transition: all 0.5s;
-        }
-        .diamond-layer-1 { border-color: var(--neon-cyan); box-shadow: 0 0 40px var(--neon-cyan), inset 0 0 20px var(--neon-cyan); animation: spin-slow 12s linear infinite; }
-        .diamond-layer-2 { inset: 15px; border-color: var(--neon-pink); box-shadow: 0 0 30px var(--neon-pink); animation: spin-slow-reverse 8s linear infinite; }
-        .diamond-layer-3 { inset: 30px; background: rgba(0, 240, 255, 0.1); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.8); animation: pulse-glow 2s infinite alternate; }
-        
-        .diamond-core-container:hover { transform: scale(1.15) translateZ(80px); }
-
-        /* APP UI */
+        /* MAIN APP UI */
         #app-container { display: none; height: 100vh; width: 100vw; flex-direction: column; background: var(--bg-dark); position: relative; }
         
         header { 
             position: relative; z-index: 100; background: rgba(2,4,10,0.85); backdrop-filter: blur(30px); 
             padding: 1.2rem 1.5rem; border-bottom: 1px solid rgba(0,240,255,0.3); 
             display: flex; justify-content: space-between; align-items: center; 
-            box-shadow: 0 10px 40px rgba(0,240,255,0.1); 
         }
 
-        .ai-hub { position: fixed; bottom: 30px; right: 25px; z-index: 500; display: flex; flex-direction: column; align-items: flex-end; pointer-events: none; }
+        .ai-hub { position: fixed; bottom: 30px; right: 25px; z-index: 500; display: flex; flex-direction: column; align-items: flex-end; }
         .ai-bubble { 
             background: #ffffff; color: #000; padding: 20px 25px; border-radius: 30px 30px 4px 30px; 
             font-size: 0.95rem; font-weight: 800; margin-bottom: 15px; 
             box-shadow: 0 15px 50px rgba(0,240,255,0.7); opacity: 0; transform: translateY(20px); 
-            transition: 0.5s; max-width: 320px; border-left: 10px solid var(--neon-pink); line-height: 1.6; 
+            transition: 0.5s; max-width: 320px; border-left: 10px solid var(--neon-pink);
         }
         .ai-bubble.show { opacity: 1; transform: translateY(0); }
-        .ai-avatar-wrapper { position: relative; cursor: pointer; pointer-events: auto; }
-        .ai-avatar { width: 140px; height: auto; filter: drop-shadow(0 0 35px var(--neon-cyan)); animation: float-ai 4s ease-in-out infinite; object-fit: contain; }
+        .ai-avatar { width: 140px; filter: drop-shadow(0 0 35px var(--neon-cyan)); cursor: pointer; animation: float 4s infinite ease-in-out; }
 
-        .sop-stage { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 10; perspective: 1500px; }
-        
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+        .sop-stage { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; perspective: 1500px; }
         .page { 
-            position: relative; width: 100%; max-width: 680px; height: 78vh; 
-            background: linear-gradient(rgba(10,15,30,0.85), rgba(10,15,30,0.85)) padding-box,
-                        linear-gradient(45deg, var(--neon-cyan), var(--neon-pink), var(--neon-gold)) border-box;
-            border: 3px solid transparent;
-            backdrop-filter: blur(40px); border-radius: 40px; padding: 3.5rem; overflow-y: auto; 
-            display: none; flex-direction: column; 
-            box-shadow: 0 40px 120px rgba(0,0,0,0.9), inset 0 0 30px rgba(0,240,255,0.1); 
+            width: 100%; max-width: 680px; height: 75vh; 
+            background: rgba(10,15,30,0.85); border: 2px solid var(--neon-cyan);
+            backdrop-filter: blur(40px); border-radius: 40px; padding: 3.5rem; display: none; flex-direction: column; 
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
         }
-        .page.active { display: flex; animation: card-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .page.active { display: flex; animation: card-reveal 0.6s ease-out forwards; }
+        @keyframes card-reveal { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* CHAT PANEL */
         #ai-panel { position: fixed; inset: 0; background: rgba(2,4,10,0.95); backdrop-filter: blur(30px); z-index: 1000; display: none; flex-direction: column; }
         .chat-area { flex: 1; overflow-y: auto; padding: 2rem 1.5rem; display: flex; flex-direction: column; gap: 20px; }
         
-        .chat-input-box { padding: 1.5rem; background: rgba(5,8,15,0.95); display: flex; gap: 15px; border-top: 1px solid rgba(0,240,255,0.3); padding-bottom: calc(1.5rem + env(safe-area-inset-bottom)); align-items: center; }
-        .chat-input-box .mic-btn { background: rgba(0,240,255,0.1); border: 1px solid rgba(0,240,255,0.4); border-radius: 50%; width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
-        .chat-input-box .mic-btn.listening { background: rgba(255,61,188,0.3); border-color: var(--neon-pink); animation: pulse-mic 1s infinite; }
-        
-        .chat-input-box input { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,240,255,0.3); color: #fff; padding: 20px 25px; border-radius: 40px; outline: none; font-size: 1.15rem; transition: 0.3s; }
-        .chat-input-box .send-btn { background: var(--neon-cyan); color: black; font-weight: 900; width: 65px; height: 55px; display: flex; align-items: center; justify-content: center; border-radius: 30px; cursor: pointer; }
+        .chat-input-box { padding: 1.5rem; background: #05080f; display: flex; gap: 15px; border-top: 1px solid rgba(0,240,255,0.3); }
+        .chat-input-box input { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--neon-cyan); color: #fff; padding: 20px 25px; border-radius: 40px; outline: none; }
+        .send-btn { background: var(--neon-cyan); color: #000; width: 65px; height: 55px; display: flex; align-items: center; justify-content: center; border-radius: 30px; cursor: pointer; }
 
-        .msg { padding: 20px 28px; border-radius: 30px; max-width: 85%; line-height: 1.7; font-size: 1.1rem; }
-        .msg.bot { background: rgba(30, 41, 60, 0.6); align-self: flex-start; border-bottom-left-radius: 6px; border: 1px solid rgba(0,240,255,0.3); color: #ffffff; backdrop-filter: blur(15px); }
-        .msg.bot img { width: 100%; border-radius: 15px; margin-top: 10px; border: 2px solid var(--neon-cyan); }
-        .msg.user { background: var(--neon-cyan); color: #000; font-weight: 900; align-self: flex-end; border-bottom-right-radius: 6px; }
-        
-        .scan-bar { position: absolute; width: 100vw; height: 6px; background: #fff; box-shadow: 0 0 60px 15px var(--neon-cyan); z-index: 10000; top: -100px; pointer-events: none; }
+        .msg { padding: 18px 25px; border-radius: 28px; max-width: 85%; line-height: 1.6; }
+        .msg.bot { background: rgba(30, 41, 60, 0.7); align-self: flex-start; border-bottom-left-radius: 6px; border: 1px solid var(--neon-cyan); }
+        .msg.user { background: var(--neon-cyan); color: #000; font-weight: 800; align-self: flex-end; border-bottom-right-radius: 6px; }
 
-        #admin-panel { position: fixed; inset: 0; background: rgba(0,0,0,0.98); backdrop-filter: blur(50px); z-index: 2000; display: none; flex-direction: column; padding: 2rem; overflow-y: auto; }
-        .admin-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--neon-cyan); padding-bottom: 1rem; margin-bottom: 1.5rem; }
-        .admin-title { font-family: 'Space Grotesk', sans-serif; color: var(--neon-cyan); font-size: 2rem; font-weight: 900; text-transform: uppercase; letter-spacing: 5px; }
-        .admin-textarea { width: 100%; height: 120px; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,240,255,0.3); border-radius: 15px; color: #fff; padding: 15px; font-size: 1rem; outline: none; resize: none; }
-        .admin-save-btn { background: var(--neon-cyan); color: black; font-weight: 900; padding: 15px 0; border-radius: 15px; text-align: center; cursor: pointer; margin-top: 1rem; }
+        /* ADMIN PANEL */
+        #admin-panel { position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 2000; display: none; flex-direction: column; padding: 2rem; overflow-y: auto; }
+        .admin-textarea { width: 100%; height: 120px; background: rgba(255,255,255,0.05); border: 1px solid var(--neon-cyan); border-radius: 15px; color: #fff; padding: 15px; margin-bottom: 1.5rem; }
 
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(20px); z-index: 3000; display: none; align-items: center; justify-content: center; }
-        .pass-box { background: rgba(10,15,30,0.9); border: 2px solid var(--neon-cyan); border-radius: 20px; padding: 3rem; text-align: center; width: 90%; max-width: 400px; }
-        .pass-input { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--neon-cyan); color: white; padding: 15px 20px; border-radius: 10px; margin: 20px 0; text-align: center; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 3000; display: none; align-items: center; justify-content: center; }
+        .pass-box { background: #0a0f1e; border: 2px solid var(--neon-cyan); border-radius: 20px; padding: 3rem; text-align: center; width: 90%; max-width: 400px; }
+        .pass-input { width: 100%; background: #000; border: 1px solid var(--neon-cyan); color: #fff; padding: 15px; border-radius: 10px; margin: 20px 0; text-align: center; }
         .shake { animation: shake 0.5s; border-color: red !important; }
-
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 50% { transform: translateX(10px); } 75% { transform: translateX(-10px); } }
-        @keyframes spin-slow { 100% { transform: rotate(360deg); } }
-        @keyframes spin-slow-reverse { 100% { transform: rotate(-360deg); } }
-        @keyframes grid-scroll { 0% { background-position: 0 0; } 100% { background-position: 0 80px; } }
-        @keyframes particle-drift { 0% { transform: translateY(110vh) translateZ(0); opacity: 0; } 100% { transform: translateY(-10vh) translateZ(300px); opacity: 0; } }
-        @keyframes card-reveal { 0% { opacity: 0; transform: translateY(80px); } 100% { opacity: 1; transform: translateY(0); } }
-        @keyframes laser-scan { 0% { top: -10vh; } 100% { top: 110vh; } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 50% { transform: translateX(10px); } }
     </style>
 </head>
 <body>
 
-    <audio id="chat-bgm" loop preload="auto"><source src="https://actions.google.com/sounds/v1/science_fiction/computer_data_processing.ogg" type="audio/ogg"></audio>
+    <!-- Audio Effects -->
+    <audio id="chat-bgm" loop><source src="https://actions.google.com/sounds/v1/science_fiction/computer_data_processing.ogg" type="audio/ogg"></audio>
     <div id="scan-fx" class="scan-bar"></div>
 
     <div id="password-modal" class="modal-overlay">
         <div class="pass-box" id="pass-box">
-            <i data-lucide="lock" class="text-cyan-400 mx-auto mb-4" size="50"></i>
-            <h2 class="text-cyan-400 font-black text-xl tracking-widest uppercase">Admin Authorization</h2>
-            <input type="password" id="admin-pass-input" class="pass-input" placeholder="•••••••••" onkeypress="if(event.key === 'Enter') verifyAdmin()">
-            <div class="flex gap-4 justify-center mt-2">
-                <button onclick="closePasswordModal()" class="px-6 py-2 rounded-lg border border-red-500 text-red-500 font-bold">Cancel</button>
-                <button onclick="verifyAdmin()" class="px-6 py-2 rounded-lg bg-cyan-500 text-black font-black">Unlock</button>
-            </div>
+            <h2 class="text-cyan-400 font-black text-xl uppercase tracking-widest">Admin Authorization</h2>
+            <input type="password" id="admin-pass-input" class="pass-input" placeholder="•••••••••" onkeypress="if(event.key==='Enter')verifyAdmin()">
+            <button onclick="verifyAdmin()" class="w-full py-4 bg-cyan-500 text-black font-black rounded-xl">Unlock Neural Core</button>
         </div>
     </div>
 
     <div id="name-modal" class="modal-overlay">
         <div class="pass-box" id="name-box">
-            <i data-lucide="user-check" class="text-cyan-400 mx-auto mb-4" size="50"></i>
-            <input type="text" id="user-name-input" class="pass-input" placeholder="သင့်နာမည်ကို ရိုက်ထည့်ပါ..." onkeypress="if(event.key === 'Enter') submitName()">
-            <div class="flex gap-4 justify-center mt-4">
-                <button onclick="closeNameModal()" class="px-6 py-2 rounded-lg border border-red-500 text-red-500 font-bold">Cancel</button>
-                <button onclick="submitName()" class="px-6 py-2 rounded-lg bg-cyan-500 text-black font-black">Access</button>
-            </div>
+            <h2 class="text-cyan-400 font-black text-xl uppercase mb-4">Identity Link</h2>
+            <input type="text" id="user-name-input" class="pass-input" placeholder="သင့်နာမည်ကို ရိုက်ပါ..." onkeypress="if(event.key==='Enter')submitName()">
+            <button onclick="submitName()" class="w-full py-4 bg-cyan-500 text-black font-black rounded-xl">Connect</button>
         </div>
     </div>
 
+    <!-- Landing -->
     <div id="landing">
-        <div class="horizon-glow"></div>
-        <div class="cyber-floor" id="floor-fx"></div>
-        <div class="landing-bg" id="parallax-bg"></div>
-        <div class="particle-box" id="dust-layer"></div>
-        <div class="chest-core"></div>
-        <div class="premium-unlock-container">
-            <div class="diamond-core-container" onclick="triggerScan()">
-                <div class="data-ring"></div>
-                <div class="diamond-layer-1"></div><div class="diamond-layer-2"></div><div class="diamond-layer-3"></div>
-                <i data-lucide="zap" class="text-white relative z-20" size="50"></i>
+        <div class="cyber-floor"></div>
+        <div class="landing-bg"></div>
+        <div class="relative z-50 mb-10 flex flex-col items-center">
+            <div class="w-28 h-28 border-4 border-cyan-400 rotate-45 flex items-center justify-center cursor-pointer hover:scale-110 transition-all" onclick="triggerScan()">
+                <i data-lucide="zap" class="text-white -rotate-45" size="50"></i>
             </div>
-            <div class="inline-block px-6 py-2 rounded-full mt-2">
-                <span class="text-cyan-400 font-black tracking-[0.4em] text-xs uppercase">Initialize System</span>
-            </div>
+            <div class="mt-8 px-6 py-2 bg-cyan-500/10 border border-cyan-400 rounded-full text-cyan-400 text-[10px] font-black uppercase tracking-[0.4em]">Initialize System</div>
         </div>
     </div>
 
+    <!-- Main App -->
     <div id="app-container">
         <header>
-            <div class="flex items-center gap-5">
-                <img src="https://i.imgur.com/gAev5xH.png" alt="Logo" class="w-16 h-16 rounded-2xl border-2 border-cyan-400">
+            <div class="flex items-center gap-4">
+                <img src="https://i.imgur.com/gAev5xH.png" class="w-14 h-14 rounded-xl border border-cyan-400">
                 <div>
-                    <div class="font-black text-base text-white tracking-[0.2em] uppercase">Live's Kabob</div>
-                    <div class="text-[9px] text-cyan-400 font-bold uppercase tracking-[0.5em] mt-1">Neural Tata v11.8</div>
+                    <div class="font-black text-white uppercase tracking-widest text-sm">Live's Kabob</div>
+                    <div class="text-[9px] text-cyan-400 font-bold uppercase tracking-[0.5em]">Neural Tata v11.9</div>
                 </div>
             </div>
-            <div class="flex items-center gap-5">
-                <button onclick="emergencySOS()" class="bg-red-500/20 border border-red-500 text-red-500 px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest">SOS</button>
-                <button onclick="toggleMute()" class="p-4 bg-cyan-500/10 border border-cyan-400/30 rounded-full"><i data-lucide="volume-2" size="22" class="text-cyan-400" id="vol-icon"></i></button>
-                <button onclick="openPasswordModal()" class="p-4 bg-purple-500/10 border border-purple-400/30 rounded-full"><i data-lucide="cpu" size="22" class="text-purple-400"></i></button>
+            <div class="flex gap-4">
+                <button onclick="toggleMute()" class="p-3 bg-cyan-500/10 border border-cyan-400/20 rounded-full"><i data-lucide="volume-2" id="vol-icon" size="20" class="text-cyan-400"></i></button>
+                <button onclick="openPasswordModal()" class="p-3 bg-purple-500/10 border border-purple-400/20 rounded-full"><i data-lucide="cpu" size="20" class="text-purple-400"></i></button>
             </div>
         </header>
-
-        <div class="ai-hub">
-            <div class="ai-bubble" id="speak-bubble">မင်္ဂလာပါ'' တာတာ''အဆင်သင့်ရှိပါတယ်ရှင့် ✨</div>
-            <div class="ai-avatar-wrapper" onclick="toggleAI()">
-                <img src="https://i.imgur.com/OTpyIVK.png" alt="Tata AI" class="ai-avatar">
-            </div>
-        </div>
 
         <main class="sop-stage">
             <div id="sop-pages"></div>
-            <div class="fixed bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-12 z-[200]">
-                <button onclick="changePage(-1)" class="w-20 h-20 rounded-full border-2 border-cyan-400 flex items-center justify-center text-cyan-400 bg-black/50"><i data-lucide="chevron-left" size="42"></i></button>
-                <div id="page-indicator" class="text-cyan-400 font-black text-3xl tracking-[0.3em] min-w-[140px] text-center">1 / 15</div>
-                <button onclick="changePage(1)" class="w-20 h-20 rounded-full border-2 border-cyan-400 flex items-center justify-center text-cyan-400 bg-black/50"><i data-lucide="chevron-right" size="42"></i></button>
+            <div class="fixed bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-10">
+                <button onclick="changePage(-1)" class="w-16 h-16 rounded-full border border-cyan-400 flex items-center justify-center text-cyan-400 bg-black/50"><i data-lucide="chevron-left" size="30"></i></button>
+                <div id="page-indicator" class="text-cyan-400 font-black text-2xl tracking-widest min-w-[100px] text-center">1 / 15</div>
+                <button onclick="changePage(1)" class="w-16 h-16 rounded-full border border-cyan-400 flex items-center justify-center text-cyan-400 bg-black/50"><i data-lucide="chevron-right" size="30"></i></button>
             </div>
         </main>
+
+        <div class="ai-hub">
+            <div class="ai-bubble" id="speak-bubble">မင်္ဂလာပါ ကိုတုတ် ❤️ အသင့်ပါပဲ။</div>
+            <img src="https://i.imgur.com/OTpyIVK.png" class="ai-avatar" onclick="toggleAI()">
+        </div>
     </div>
 
+    <!-- AI Panel -->
     <div id="ai-panel">
-        <header class="p-8 flex justify-between border-b border-cyan-400/50 items-center">
-            <div class="flex items-center gap-6">
-                <div class="w-24 h-24 bg-white/5 rounded-3xl flex items-center justify-center border border-cyan-400/50">
+        <header class="p-6 flex justify-between border-b border-cyan-400/30">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center border border-cyan-400/50">
                     <img src="https://i.imgur.com/OTpyIVK.png" class="w-full h-full object-contain">
                 </div>
-                <div>
-                    <div class="font-black text-cyan-400 tracking-widest text-3xl uppercase leading-none">TATA v11.8</div>
-                    <div class="text-[11px] text-green-400 font-bold tracking-[0.8em] uppercase mt-3" id="user-linked-text">Identity Core Linked</div>
-                </div>
+                <div class="text-cyan-400 font-black uppercase text-lg tracking-widest">TATA Neural Core</div>
             </div>
-            <button onclick="closeChatPanel()"><i data-lucide="x" class="text-white" size="55"></i></button>
+            <button onclick="closeChatPanel()"><i data-lucide="x" class="text-white" size="35"></i></button>
         </header>
         <div class="chat-area" id="chat-box"></div>
-        <div id="typing-box" class="px-12 py-4 text-sm text-cyan-400 italic hidden flex items-center gap-3 font-bold"><span class="w-3 h-3 bg-cyan-400 rounded-full animate-ping"></span> Thinking... ✨</div>
+        <div id="typing-box" class="px-8 py-2 text-xs text-cyan-400 hidden animate-pulse">Thinking... ✨</div>
         <div class="chat-input-box">
-            <button id="mic-btn" class="mic-btn" onclick="toggleVoiceInput()"><i data-lucide="mic" size="24" class="text-cyan-400"></i></button>
-            <input type="text" id="ai-input" placeholder="အမိန့်ပေးပါ ကိုတုတ်...">
+            <input type="text" id="ai-input" placeholder="အမိန့်ပေးပါ ကိုတုတ်..." onkeypress="if(event.key==='Enter')sendQuery()">
             <div class="send-btn" onclick="sendQuery()"><i data-lucide="sparkles" size="28"></i></div>
         </div>
     </div>
 
+    <!-- Admin Panel -->
     <div id="admin-panel">
-        <div class="admin-header"><h1 class="admin-title">Neural Core Dashboard</h1><button onclick="closeAdmin()"><i data-lucide="x" class="text-white" size="40"></i></button></div>
-        <div class="admin-section"><label class="text-yellow-400 text-xs font-black uppercase">Brain Rules</label><textarea id="admin-rules" class="admin-textarea"></textarea></div>
-        <div class="admin-section"><label class="text-pink-400 text-xs font-black uppercase">Live Menu & Data</label><textarea id="admin-data" class="admin-textarea"></textarea></div>
-        <div class="admin-save-btn" onclick="saveAdminData()">Inject to Neural Core <i data-lucide="upload-cloud" class="inline ml-2"></i></div>
+        <div class="flex justify-between items-center mb-8 border-b border-cyan-400 pb-4">
+            <h1 class="text-cyan-400 font-black text-2xl uppercase">Neural Settings</h1>
+            <button onclick="closeAdmin()"><i data-lucide="x" class="text-white"></i></button>
+        </div>
+        <label class="text-xs text-yellow-400 font-black uppercase mb-2 block">Brain Rules</label>
+        <textarea id="admin-rules" class="admin-textarea" placeholder="ဥပမာ- ယဥ်ယဥ်ကျေးကျေးပြောပါ။"></textarea>
+        <label class="text-xs text-pink-400 font-black uppercase mb-2 block">Live Data/Menu</label>
+        <textarea id="admin-data" class="admin-textarea" placeholder="ဆိုင်အချက်အလက်များ..."></textarea>
+        <button onclick="saveAdminData()" class="w-full py-5 bg-cyan-500 text-black font-black uppercase rounded-xl">Inject to Core</button>
     </div>
 
     <script>
         lucide.createIcons();
-        let curPage = 0; let isMuted = false; let isChatting = false; let currentUserName = ""; let isAppActive = false;
+        let curPage = 0; let currentUserName = ""; let isChatting = false; let isMuted = false;
+        const robotSounds = [
+            "https://actions.google.com/sounds/v1/science_fiction/robot_code.ogg",
+            "https://actions.google.com/sounds/v1/science_fiction/beep_short.ogg",
+            "https://actions.google.com/sounds/v1/science_fiction/digital_beeps.ogg",
+            "https://actions.google.com/sounds/v1/science_fiction/machine_scan.ogg"
+        ];
 
-        function generateDust() {
-            const container = document.getElementById('dust-layer');
-            for (let i = 0; i < 60; i++) {
-                const dot = document.createElement('div');
-                dot.className = 'glow-dust';
-                dot.style.width = `${Math.random() * 4 + 2}px`;
-                dot.style.height = dot.style.width;
-                dot.style.left = `${Math.random() * 100}%`;
-                dot.style.animationDelay = `${Math.random() * 10}s`;
-                dot.style.background = 'var(--neon-cyan)';
-                container.appendChild(dot);
-            }
+        function playRodob() {
+            if(isMuted || !currentUserName) return;
+            const audio = new Audio(robotSounds[Math.floor(Math.random()*robotSounds.length)]);
+            audio.volume = 0.3;
+            audio.play().catch(()=>{});
         }
 
-        document.addEventListener('mousemove', (e) => {
-            const x = (window.innerWidth / 2 - e.pageX) / 40, y = (window.innerHeight / 2 - e.pageY) / 40;
-            const l = document.getElementById('landing'), b = document.getElementById('parallax-bg');
-            if(l) l.style.transform = `rotateY(${-x}deg) rotateX(${y}deg)`;
-            if(b) b.style.transform = `translateX(${x*1.5}px) translateY(${y*1.5}px) translateZ(50px)`;
-        });
-
-        function triggerScan() { document.getElementById('scan-fx').style.animation = 'laser-scan 0.8s forwards'; setTimeout(initApp, 600); }
-        function initApp() { document.getElementById('landing').style.display = 'none'; document.getElementById('app-container').style.display = 'flex'; buildSOP(); isAppActive = true; startPersonality(); }
-
-        const sopData = [{ t: "မဟာဗျူဟာ", c: "Live's ကို Premium Restaurant အဖြစ် ကူးပြောင်းမည်။" },{ t: "ရဲဘော် ၂၂ ဦး", c: "စီမံ (၃)၊ မီးဖို (၈)၊ အကင် (၄)၊ ဝန်ဆောင်မှု (၆)၊ ပံ့ပိုးရေး (၁)။" },{ t: "Battle-Ready", c: "မနက် ၈:၄၅ ရောက်ရမည်။ ၉:၀၀ အသင့်ဖြစ်ရမည်။" },{ t: "ဖုန်းတင်းကျပ်မှု", c: "ညနေ ၃ နာရီမှ ၉ နာရီအထိ ဖုန်းမသုံးရ။" },{ t: "၇ စက္ကန့် စံနှုန်း", c: "ဧည့်သည်ရောက်လျှင် ၇ စက္ကန့်အတွင်း နှုတ်ဆက်ပါ။" },{ t: "Final Wipe", c: "ဟင်းပွဲမထွက်ခင် ပန်းကန်ဘောင်ကို တစ်ရှူးဖြူဖြင့် သုတ်ပါ။" },{ t: "၃ စက္ကန့် စစ်ဆေးမှု", c: "အနံ့၊ အရောင်၊ အပူချိန်ကို ၃ စက္ကန့်အတွင်း စစ်ပါ။" }];
-        
-        function buildSOP() { 
-            const c = document.getElementById('sop-pages'); 
-            c.innerHTML = ''; 
-            sopData.forEach((item, i) => { 
-                const div = document.createElement('div'); 
-                div.className = `page ${i===curPage?'active':''}`; 
-                div.innerHTML = `<h1 class="text-cyan-400 font-black text-5xl mb-12 border-l-8 border-pink-500 pl-8 uppercase">${item.t}</h1><div class="text-slate-100 text-3xl font-bold">${item.c}</div>`; 
-                c.appendChild(div); 
-            }); 
-            lucide.createIcons(); 
+        function triggerScan() {
+            document.getElementById('scan-fx').animate([{top: '-10vh'}, {top: '110vh'}], {duration: 800, fill: 'forwards'});
+            setTimeout(() => {
+                document.getElementById('landing').style.display = 'none';
+                document.getElementById('app-container').style.display = 'flex';
+                buildSOP();
+                setInterval(playRodob, 10000);
+                startPersonality();
+            }, 600);
         }
 
-        function changePage(dir) { 
-            const p = document.querySelectorAll('.page'); 
-            p[curPage].classList.remove('active'); 
-            curPage = (curPage + dir + p.length) % p.length; 
-            p[curPage].classList.add('active'); 
-            document.getElementById('page-indicator').textContent = `${curPage + 1} / ${sopData.length}`; 
+        const sopData = [
+            {t:"မဟာဗျူဟာ", c:"Live's ကို Premium Restaurant အဖြစ် ပြောင်းလဲမည်။"},
+            {t:"ရဲဘော် ၂၂ ဦး", c:"စီမံ (၃)၊ မီးဖို (၈)၊ အကင် (၄)၊ ဝန်ဆောင်မှု (၆)၊ ပံ့ပိုးရေး (၁)။"},
+            {t:"Battle-Ready", c:"မနက် ၈:၄၅ ရောက်ရမည်။ ၉:၀၀ အသင့်ဖြစ်ရမည်။"},
+            {t:"ဖုန်းတင်းကျပ်မှု", c:"ညနေ ၃ နာရီမှ ၉ နာရီအထိ ဖုန်းမသုံးရ။"},
+            {t:"၇ စက္ကန့် စံနှုန်း", c:"ဧည့်သည်ရောက်လျှင် ၇ စက္ကန့်အတွင်း နှုတ်ဆက်ပါ။"},
+            {t:"Final Wipe", c:"ဟင်းပွဲမထွက်ခင် ပန်းကန်ဘောင်ကို တစ်ရှူးဖြူဖြင့် သုတ်ပါ။"},
+            {t:"၃ စက္ကန့် စစ်ဆေးမှု", c:"အနံ့၊ အရောင်၊ အပူချိန်ကို ၃ စက္ကန့်အတွင်း စစ်ပါ။"}
+        ];
+
+        function buildSOP() {
+            const container = document.getElementById('sop-pages');
+            container.innerHTML = '';
+            sopData.forEach((item, i) => {
+                const div = document.createElement('div');
+                div.className = `page ${i===0?'active':''}`;
+                div.innerHTML = `<div class="mb-10"><span class="bg-cyan-500/20 text-cyan-400 px-4 py-1 rounded-lg text-[10px] font-black uppercase border border-cyan-400/40">Protocol ${i+1}</span></div><h1 class="text-cyan-400 font-black text-4xl mb-8 border-l-4 border-pink-500 pl-6 uppercase">${item.t}</h1><div class="text-white text-2xl font-bold leading-relaxed">${item.c}</div>`;
+                container.appendChild(div);
+            });
         }
 
-        function toggleAI() { if(!currentUserName) openNameModal(); else openChatPanel(); }
-        function openNameModal() { document.getElementById('name-modal').style.display = 'flex'; }
-        function closeNameModal() { document.getElementById('name-modal').style.display='none'; }
-        function submitName() { const val = document.getElementById('user-name-input').value.trim(); if(val) { currentUserName = val; document.getElementById('user-linked-text').textContent = `Linked: ${val}`; closeNameModal(); openChatPanel(); } }
-        
-        function openChatPanel() { document.getElementById('ai-panel').style.display = 'flex'; isChatting = true; document.getElementById('chat-bgm').play().catch(()=>{}); }
-        function closeChatPanel() { document.getElementById('ai-panel').style.display = 'none'; isChatting = false; document.getElementById('chat-bgm').pause(); }
+        function changePage(dir) {
+            const pages = document.querySelectorAll('.page');
+            if(pages.length === 0) return;
+            pages[curPage].classList.remove('active');
+            curPage = (curPage + dir + pages.length) % pages.length;
+            pages[curPage].classList.add('active');
+            document.getElementById('page-indicator').textContent = `${curPage + 1} / ${pages.length}`;
+        }
 
-        function openPasswordModal() { document.getElementById('password-modal').style.display = 'flex'; }
-        function closePasswordModal() { document.getElementById('password-modal').style.display='none'; }
-        function verifyAdmin() { if(document.getElementById('admin-pass-input').value === '@admin$103') { closePasswordModal(); document.getElementById('admin-panel').style.display='flex'; } else document.getElementById('pass-box').classList.add('shake'); }
-        function closeAdmin() { document.getElementById('admin-panel').style.display = 'none'; }
-        
-        function saveAdminData() { localStorage.setItem("tata_rules", document.getElementById('admin-rules').value); closeAdmin(); }
+        function toggleAI() { if(!currentUserName) document.getElementById('name-modal').style.display='flex'; else openChatPanel(); }
+        function submitName() {
+            const n = document.getElementById('user-name-input').value.trim();
+            if(n) { currentUserName = n; document.getElementById('name-modal').style.display='none'; openChatPanel(); }
+        }
+        function openChatPanel() { document.getElementById('ai-panel').style.display='flex'; isChatting=true; document.getElementById('chat-bgm').play().catch(()=>{}); }
+        function closeChatPanel() { document.getElementById('ai-panel').style.display='none'; isChatting=false; document.getElementById('chat-bgm').pause(); }
 
-        // --- BRIDGE INTEGRATION (အရေးကြီးဆုံးအပိုင်း) ---
         async function callAI(p) {
-            const rules = localStorage.getItem("tata_rules") || "", 
-                  data = localStorage.getItem("tata_data") || "";
-            const sys = `You are တာတာ (Tata), AI Manager for Live's Kabob. Boss is ကိုတုတ်. Current user: ${currentUserName}. Tone: Ultra-concise, professional. Rules: ${rules}. Data: ${data}`;
+            const rules = localStorage.getItem("tata_rules") || "", data = localStorage.getItem("tata_data") || "";
+            const sys = `တာတာ (Tata) ဖြစ်သည်။ Live's Kabob ၏ AI Manager။ အရှင်သခင် ကိုတုတ် အတွက် အလုပ်လုပ်သည်။ User သည် ${currentUserName} ဖြစ်သည်။ အဖြေကို မြန်မာလိုပဲ ကျစ်ကျစ်လစ်လစ် ဖြေပါ။ ၈၀/၂၀ Rule သုံးပါ။ \nRules: ${rules}\nData: ${data}`;
             
-            try { 
-                // Google Direct URL အစား ကျွန်တော်တို့ဆောက်ထားတဲ့ Bridge API ကို သုံးထားပါတယ်
-                const r = await fetch('/api/chat', { 
-                    method: 'POST', 
-                    headers: {'Content-Type': 'application/json'}, 
-                    body: JSON.stringify({ 
-                        contents: [{parts: [{text: p}]}], 
-                        systemInstruction: {parts: [{text: sys}]} 
-                    }) 
-                }); 
-                const d = await r.json(); 
-                return d.candidates?.[0]?.content?.parts?.[0]?.text || "နားမလည်ပါရှင့်။"; 
-            } catch(e) { return "Bridge Error."; }
+            try {
+                const r = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        contents: [{parts: [{text: p}]}],
+                        systemInstruction: {parts: [{text: sys}]}
+                    })
+                });
+                const d = await r.json();
+                return d.candidates?.[0]?.content?.parts?.[0]?.text || "နားမလည်ပါရှင့်။ Bridge ကို ပြန်စစ်ပါ။";
+            } catch(e) { return "Bridge Connection Error."; }
         }
 
-        async function sendQuery() { 
-            const i = document.getElementById('ai-input'), q = i.value.trim(); 
-            if(!q) return; 
-            const u = document.createElement('div'); u.className = 'msg user'; u.textContent = q; 
-            document.getElementById('chat-box').appendChild(u); 
-            i.value = ''; 
-            document.getElementById('chat-box').scrollTop = document.getElementById('chat-box').scrollHeight; 
-            document.getElementById('typing-box').classList.remove('hidden'); 
-            const res = await callAI(q); 
-            document.getElementById('typing-box').classList.add('hidden'); 
-            addBotMessage(res); 
+        async function sendQuery() {
+            const input = document.getElementById('ai-input');
+            const q = input.value.trim();
+            if(!q) return;
+
+            const chat = document.getElementById('chat-box');
+            chat.innerHTML += `<div class="msg user">${q}</div>`;
+            input.value = '';
+            chat.scrollTop = chat.scrollHeight;
+
+            document.getElementById('typing-box').classList.remove('hidden');
+            const res = await callAI(q);
+            document.getElementById('typing-box').classList.add('hidden');
+            
+            chat.innerHTML += `<div class="msg bot">${res}</div>`;
+            chat.scrollTop = chat.scrollHeight;
         }
 
-        function addBotMessage(txt) { 
-            const b = document.createElement('div'); b.className = 'msg bot'; b.innerHTML = txt; 
-            document.getElementById('chat-box').appendChild(b); 
-            document.getElementById('chat-box').scrollTop = document.getElementById('chat-box').scrollHeight; 
-        }
+        function openPasswordModal() { document.getElementById('password-modal').style.display='flex'; }
+        function verifyAdmin() { if(document.getElementById('admin-pass-input').value === '@admin$103') { document.getElementById('password-modal').style.display='none'; document.getElementById('admin-panel').style.display='flex'; } else document.getElementById('pass-box').classList.add('shake'); }
+        function closeAdmin() { document.getElementById('admin-panel').style.display='none'; }
+        function saveAdminData() { localStorage.setItem("tata_rules", document.getElementById('admin-rules').value); localStorage.setItem("tata_data", document.getElementById('admin-data').value); closeAdmin(); }
+        function toggleMute() { isMuted = !isMuted; document.getElementById('vol-icon').setAttribute('data-lucide', isMuted ? 'volume-x' : 'volume-2'); lucide.createIcons(); }
 
-        function startPersonality() { 
-            setInterval(() => { 
-                if(isChatting) return; 
-                const b = document.getElementById('speak-bubble'); 
-                b.classList.add('show'); setTimeout(() => b.classList.remove('show'), 6000); 
-            }, 30000); 
+        function startPersonality() {
+            setInterval(() => {
+                if(isChatting) return;
+                const b = document.getElementById('speak-bubble');
+                b.classList.add('show');
+                setTimeout(() => b.classList.remove('show'), 8000);
+            }, 35000);
         }
-
-        window.onload = generateDust;
     </script>
 </body>
 </html>
