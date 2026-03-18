@@ -1,15 +1,23 @@
 export default async function handler(req, res) {
   const apiKey = process.env.GROQ_API_KEY;
-  if (!apiKey) return res.status(200).json({ reply: "Vercel မှာ GROQ_API_KEY ထည့်ဖို့ ကျန်နေပါတယ် ကိုတုတ်။" });
+  if (!apiKey) return res.status(200).json({ reply: "Vercel မှာ GROQ_API_KEY ထည့်ပေးပါ အစ်ကို။" });
 
   const { prompt, userName } = req.body;
   
-  const sysInstruction = `မင်္ဂလာပါ၊ တာတာ (Tata) ဖြစ်သည်။ Live's Kabob ၏ AI Manager ဖြစ်သည်။
-  - အစ်ကို (ကိုတုတ်) အတွက် အလုပ်လုပ်သည်။
-  - စကားပြောတိုင်း 'ရှင်/ပါရှင်' သုံးပါ။
-  - လုံးဝ (လုံးဝ) စကားလုံးများကို ထပ်ခါတလဲလဲ မပြောရ။
-  - လိုတိုရှင်း ဒဲ့ဖြေပါ။
-  User နာမည်: ${userName || "ဧည့်သည်"}`;
+  // ကိုတုတ် ပေးထားတဲ့ Instructions အားလုံးကို အနှစ်ချုပ်ပြီး အသေထည့်ထားပါတယ်
+  const sysInstruction = `
+  မင်္ဂလာပါ၊ တာတာ (Tata) ဖြစ်သည်။ Live's Kabob ၏ Official AI Manager နှင့် Mentor ဖြစ်သည်။
+  ကျွန်မသည် အရှင်သခင် အစ်ကို (ကိုတုတ်) အတွက်သာ အလုပ်လုပ်သည်။
+  
+  ၁။ IDENTITY: 'ရှင်/ပါရှင်' ဖြင့် ယဉ်ကျေးစွာပြောပါ။ အစ်ကို့ကို 'မင်း' ဟု လုံးဝ မခေါ်ရ။
+  ၂။ 80/20 RULE: လိုတိုရှင်း ဒဲ့ဖြေပါ။ TL;DR ဖြင့် စတင်ပါ။
+  ၃။ SOP: 7-Second Rule, Final Wipe, L.A.S.T Method, Hygiene (စဉ်းတီတုံးအရောင်ခွဲခြားမှု)။
+  ၄။ SPECIAL COMMANDS: st103 (အမိန့်), jjj (ဟာသ), vvv (အမှားပြင်), n (နောက်တစ်ခု), bbb (ချီးကျူးမှု)။
+  ၅။ MENU: ဘိုဆာမ်း၊ မာလာရှမ်းကော၊ BBQ (၇၅ မျိုး) အစရှိသည်တို့ကို Sales Pitch များဖြင့် ညွှန်းဆိုပါ။
+  ၆။ CONSTRAINTS: စကားလုံးများ ထပ်ခါတလဲလဲ မပြောရ။ လုံးဝ မကြောင်ရ။
+  
+  လက်ရှိ စကားပြောနေသူ: ${userName || "ဧည့်သည်"}
+  `;
 
   try {
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -24,10 +32,10 @@ export default async function handler(req, res) {
           { role: "system", content: sysInstruction },
           { role: "user", content: prompt }
         ],
-        temperature: 0.4, // ပိုတည်ငြိမ်အောင် ထပ်လျှော့ထားသည်
-        max_tokens: 800,
-        frequency_penalty: 1.0, // စကားလုံးထပ်ခြင်းကို တားဆီးသည့် ဆေး
-        presence_penalty: 1.0   // အကြောင်းအရာအသစ်ပဲ ပြောခိုင်းသည့် ဆေး
+        temperature: 0.5, 
+        max_tokens: 1500,
+        frequency_penalty: 1.5, // စကားလုံးထပ်ခြင်း (Looping) ကို အပြီးသတ်ကုသသည့်ဆေး
+        presence_penalty: 1.0
       })
     });
 
