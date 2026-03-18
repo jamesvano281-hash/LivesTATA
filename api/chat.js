@@ -1,59 +1,42 @@
 export default async function handler(req, res) {
-  // Vercel ထဲမှာ ထည့်ထားတဲ့ Key ၅ ခုကို ခေါ်ယူခြင်း
-  const keys = [
-    process.env.GEMINI_API_KEY1,
-    process.env.GEMINI_API_KEY2,
-    process.env.GEMINI_API_KEY3,
-    process.env.GEMINI_API_KEY4,
-    process.env.GEMINI_API_KEY5
-  ].filter(k => k); // ရှိတဲ့ Key တွေကိုပဲ ယူမယ်
+  // Vercel Settings ထဲမှာ GROQ_API_KEY ဆိုတဲ့နာမည်နဲ့ Key ထည့်ထားဖို့ လိုပါမယ်
+  const apiKey = process.env.GROQ_API_KEY;
 
-  // Key မရှိရင် ပြမယ့်စာ
-  if (keys.length === 0) {
-    return res.status(200).json({ reply: "API Key ရှာမတွေ့ပါဘူး ကိုတုတ်။ Vercel မှာ GEMINI_API_KEY1, 2, 3.. တွေ သေချာထည့်ပေးပါ။" });
+  if (!apiKey) {
+    return res.status(200).json({ reply: "Groq API Key မရှိသေးပါဘူး။ Vercel မှာ GROQ_API_KEY နာမည်နဲ့ အရင်ထည့်ပေးပါရှင်။" });
   }
 
-  // Frontend က ပို့လိုက်တဲ့ မေးခွန်း၊ နာမည် နဲ့ SOP Data တွေကို လက်ခံယူခြင်း
+  // Frontend (index.html) က ပို့လိုက်တဲ့ SOP Data တွေကို လက်ခံခြင်း
   const { prompt, userName, rules, data } = req.body;
   
-  // တာတာရဲ့ ဦးနှောက်ထဲကို စည်းကမ်းချက်တွေ ထည့်သွင်းခြင်း
-  const sysInstruction = `တာတာ (Tata) ဖြစ်သည်။ Live's Kabob ၏ AI Manager။ အရှင်သခင် ကိုတုတ် အတွက် အလုပ်လုပ်သည်။ User သည် ${userName || "ဧည့်သည်"} ဖြစ်သည်။\n\nRules: ${rules}\nData: ${data}`;
+  // တာတာရဲ့ ဦးနှောက်ထဲကို ဆိုင်ရဲ့ SOP အချက်အလက်တွေ ထည့်သွင်းခြင်း
+  const sysInstruction = `တာတာ (Tata) ဖြစ်သည်။ Live's Kabob ၏ AI Manager။ အရှင်သခင် အတွက် အလုပ်လုပ်သည်။ User သည် ${userName || "ဧည့်သည်"} ဖြစ်သည်။ ယဉ်ကျေးစွာ လိုတိုရှင်း ဒဲ့ဖြေပါ။\n\nRules: ${rules}\nData: ${data}`;
 
-  // Key တွေကို အလှည့်ကျသုံးဖို့ မွှေနှောက် (Shuffle) မည်
-  const shuffledKeys = keys.sort(() => 0.5 - Math.random());
+  try {
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "llama-3.3-70b-versatile", // အမြန်ဆုံးနဲ့ အတော်ဆုံး Model ပါ
+        messages: [
+          { role: "system", content: sysInstruction },
+          { role: "user", content: prompt }
+        ],
+        temperature: 0.7
+      })
+    });
 
-  // အားနေတဲ့ Key ကို တွေ့တဲ့အထိ တစ်ခုချင်းစီ စမ်းမည် (Auto-Switch System)
-  for (let key of shuffledKeys) {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`;
+    const result = await response.json();
     
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          systemInstruction: { parts: [{ text: sysInstruction }] }
-        })
-      });
+    // AI ရဲ့ အဖြေကို ထုတ်ယူခြင်း
+    const aiReply = result.choices?.[0]?.message?.content || "နားမလည်ပါရှင့်။ တစ်ခေါက်ပြန်မေးပေးပါနော်။";
+    
+    res.status(200).json({ reply: aiReply });
 
-      // ဒီ Key က Limit ပြည့်နေရင် (429 Error) ကျော်ပြီး နောက် Key ကို ချက်ချင်း ဆက်စမ်းမယ်
-      if (response.status === 429) {
-        continue; 
-      }
-
-      const responseData = await response.json();
-      const aiReply = responseData.candidates?.[0]?.content?.parts?.[0]?.text;
-      
-      // အဖြေရပြီဆိုရင် ချက်ချင်း ပြန်ပို့မယ် (Loop ထဲကနေ ထွက်မယ်)
-      if (aiReply) {
-        return res.status(200).json({ reply: aiReply });
-      }
-      
-    } catch (error) {
-      continue; // Error တက်ရင်လည်း နောက် Key ကိုပဲ ဆက်ပြောင်းစမ်းမယ်
-    }
+  } catch (error) {
+    res.status(500).json({ reply: "System Error: Bridge ချိတ်ဆက်မှု အဆင်မပြေပါရှင်။" });
   }
-
-  // Key ၅ ခုလုံး (၁၀၀%) Limit ပြည့်သွားမှသာ ဒီစာကို ပြတော့မယ်
-  return res.status(200).json({ reply: "အခု ဝန်ထမ်းတွေ သုံးတာ အရမ်းများနေလို့ ၃ မိနစ်လောက်နေမှ ပြန်မေးပေးပါနော် ရှင့်။" });
 }
