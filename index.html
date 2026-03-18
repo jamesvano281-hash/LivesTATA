@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Live's Kabob - Neural Tata v10.2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pyidaungsu:wght@400;700&display=swap');
+        :root { --neon-cyan: #00F0FF; --bg-dark: #02040a; --glass: rgba(10, 15, 30, 0.85); }
+        html, body { font-family: 'Pyidaungsu', sans-serif; background-color: var(--bg-dark); color: #f8fafc; margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
+        .landing-bg { position: absolute; inset: 0; background: url('https://i.imgur.com/bbi96kK.jpeg') center/cover no-repeat; z-index: 0; filter: brightness(0.65); }
+        #landing { position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 10vh; background: #000; }
+        .diamond-core { position: relative; width: 110px; height: 110px; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 100; transition: 0.3s; }
+        #app-container { display: none; flex-direction: column; height: 100%; }
+        #ai-panel { position: fixed; inset: 0; z-index: 2000; background: rgba(2, 4, 10, 0.98); display: none; flex-direction: column; backdrop-filter: blur(40px); }
+        .msg { padding: 12px 18px; border-radius: 18px; max-width: 85%; margin-bottom: 8px; font-size: 0.95rem; }
+        .msg.bot { background: rgba(255, 255, 255, 0.05); align-self: flex-start; border: 1px solid rgba(0, 240, 255, 0.1); }
+        .msg.user { background: var(--neon-cyan); color: #000; font-weight: 700; align-self: flex-end; }
+    </style>
+</head>
+<body>
+    <audio id="robot-bird" loop><source src="https://actions.google.com/sounds/v1/science_fiction/robot_code.ogg" type="audio/ogg"></audio>
+    <div id="landing">
+        <div class="landing-bg"></div>
+        <div class="diamond-core" onclick="bootSystem()">
+            <div class="absolute inset-0 border-2 border-cyan-400 rotate-45 shadow-[0_0_20px_#00f0ff]"></div>
+            <i data-lucide="zap" class="text-white relative z-20"></i>
+        </div>
+        <p class="text-cyan-400 font-black tracking-[0.4em] text-[9px] mt-6 uppercase">Initialize Neural Core</p>
+    </div>
+    <div id="app-container">
+        <header class="h-16 flex items-center justify-between px-6 bg-black/40 border-b border-white/5">
+            <div class="flex items-center gap-3"><img src="https://i.imgur.com/gAev5xH.png" class="w-8 h-8 rounded-lg"><h1 class="text-white font-black text-[10px] uppercase">Live's Kabob</h1></div>
+            <div class="text-cyan-400 text-[9px] font-bold" id="user-display">GUEST</div>
+        </header>
+        <main class="flex-1 flex flex-col items-center justify-center p-6 text-center">
+            <h2 class="text-cyan-400 font-black text-xl mb-4 uppercase">System Ready</h2>
+            <p class="text-gray-400 text-sm">တာတာ့ကို အောက်ခြေက ပုံလေးနှိပ်ပြီး မေးမြန်းနိုင်ပါပြီ ကိုတုတ်။</p>
+        </main>
+        <div class="fixed bottom-6 right-6 cursor-pointer" onclick="handleAiClick()"><img src="https://i.imgur.com/OTpyIVK.png" class="w-16 h-16 drop-shadow-lg"></div>
+    </div>
+    <div id="ai-panel">
+        <header class="h-16 flex items-center justify-between px-6 border-b border-white/5">
+            <div class="flex items-center gap-3"><img src="https://i.imgur.com/OTpyIVK.png" class="w-8 h-8"><span class="text-cyan-400 font-bold text-sm">Tata AI</span></div>
+            <button onclick="toggleAI(false)"><i data-lucide="x" class="text-white/40"></i></button>
+        </header>
+        <div class="flex-1 overflow-y-auto p-5 flex flex-col" id="chat-content"></div>
+        <div id="load-box" class="px-6 py-2 text-[10px] text-cyan-400 italic hidden">Thinking...</div>
+        <div class="p-4 bg-black flex gap-2">
+            <input type="text" id="user-input" class="flex-1 bg-white/5 border border-white/10 text-white px-4 py-2.5 rounded-full outline-none text-sm" placeholder="အမိန့်ပေးပါ ကိုတုတ်..." autocomplete="off">
+            <button onclick="processChat()" class="bg-cyan-500 text-black px-5 rounded-full font-black"><i data-lucide="send" size="16"></i></button>
+        </div>
+    </div>
+    <script>
+        lucide.createIcons();
+        let currentUser = "";
+        function bootSystem() { document.getElementById('landing').style.display = 'none'; document.getElementById('app-container').style.display = 'flex'; }
+        function handleAiClick() { if(!currentUser) { currentUser = prompt("နာမည်ရေးပါ ကိုတုတ်..."); if(currentUser) { document.getElementById('user-display').textContent = currentUser.toUpperCase(); toggleAI(true); } } else { toggleAI(true); } }
+        function toggleAI(show) { document.getElementById('ai-panel').style.display = show ? 'flex' : 'none'; }
+        async function processChat() {
+            const input = document.getElementById('user-input'); const txt = input.value.trim(); if(!txt) return;
+            const u = document.createElement('div'); u.className = 'msg user'; u.textContent = txt;
+            document.getElementById('chat-content').appendChild(u); input.value = '';
+            document.getElementById('load-box').classList.remove('hidden'); document.getElementById('robot-bird').play().catch(()=>{});
+            try {
+                const res = await fetch('/api/chat', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ contents:[{parts:[{text:txt}]}] }) });
+                const d = await res.json(); document.getElementById('robot-bird').pause(); document.getElementById('load-box').classList.add('hidden');
+                const b = document.createElement('div'); b.className = 'msg bot'; b.textContent = d.candidates[0].content.parts[0].text;
+                document.getElementById('chat-content').appendChild(b);
+            } catch(e) { alert("Error connecting to bridge."); }
+            document.getElementById('chat-content').scrollTop = document.getElementById('chat-content').scrollHeight;
+        }
+    </script>
+</body>
+</html>
