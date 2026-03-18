@@ -1,12 +1,12 @@
 export default async function handler(req, res) {
-  // KEY ၁ ခုထက်ပိုပြီး သုံးနိုင်အောင် Array ဆောက်ထားခြင်း
+  // ကိုတုတ် Vercel မှာ ထည့်ထားတဲ့ Key ၅ ခုလုံးကို ပေါင်းယူလိုက်ခြင်း
   const keys = [
-    process.env.GEMINI_API_KEY,  // မူလ Key
-    process.env.KEY_2,           // အပို Key ၂
-    process.env.KEY_3,           // အပို Key ၃
-    process.env.KEY_4,           // အပို Key ၄
-    process.env.KEY_5            // အပို Key ၅
-  ].filter(k => k); // ရှိတဲ့ Key တွေကိုပဲ ရွေးယူမယ်
+    process.env.GEMINI_API_KEY1,
+    process.env.GEMINI_API_KEY2,
+    process.env.GEMINI_API_KEY3,
+    process.env.GEMINI_API_KEY4,
+    process.env.GEMINI_API_KEY5
+  ].filter(k => k); // ရှိသမျှ Key တွေကိုပဲ စစ်ထုတ်ယူမယ်
 
   // Key တွေထဲက တစ်ခုကို အလှည့်ကျ (Random) ရွေးသုံးမယ်
   const randomKey = keys[Math.floor(Math.random() * keys.length)];
@@ -26,13 +26,13 @@ export default async function handler(req, res) {
     });
 
     const responseData = await response.json();
-    
-    // Error 429 တက်ရင် ဝန်ထမ်းကို ယဉ်ယဉ်ကျေးကျေး အကြောင်းကြားမယ်
+
+    // Limit ပြည့်သွားရင် ဝန်ထမ်းကို အသိပေးမယ်
     if (response.status === 429) {
-      return res.status(200).json({ reply: "အခု ဝန်ထမ်းတွေ သုံးတာ များနေလို့ ၅ မိနစ်လောက်နေမှ ပြန်မေးပေးပါနော်။" });
+      return res.status(200).json({ reply: "အခု ဝန်ထမ်းတွေ သုံးတာ အရမ်းများနေလို့ ၃ မိနစ်လောက်နေမှ ပြန်မေးပေးပါနော်။" });
     }
 
-    const aiReply = responseData.candidates?.[0]?.content?.parts?.[0]?.text || "နားမလည်ပါရှင့်။";
+    const aiReply = responseData.candidates?.[0]?.content?.parts?.[0]?.text || "နားမလည်ပါရှင့်။ Bridge ကို ပြန်စစ်ပါ။";
     res.status(200).json({ reply: aiReply });
     
   } catch (error) {
