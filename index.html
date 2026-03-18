@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Live's Kabob - Neural Tata v11.8 (Ultimate Core)</title>
+    <title>Live's Kabob - Neural Tata v11.8</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -236,7 +236,7 @@
     <div id="app-container">
         <header>
             <div class="flex items-center gap-5">
-                <img src="https://i.imgur.com/gAev5xH.png" alt="Logo" class="w-16 h-16 rounded-2xl border-2 border-cyan-400">
+                <img src="https://i.imgur.com/ir3HVvy.png" alt="Logo" class="w-16 h-16 rounded-2xl border-2 border-cyan-400 bg-black/40 p-1">
                 <div>
                     <div class="font-black text-base text-white tracking-[0.2em] uppercase">Live's Kabob</div>
                     <div class="text-[9px] text-cyan-400 font-bold uppercase tracking-[0.5em] mt-1">Neural Tata v11.8</div>
@@ -269,7 +269,7 @@
     <div id="ai-panel">
         <header class="p-8 flex justify-between border-b border-cyan-400/50 items-center">
             <div class="flex items-center gap-6">
-                <div class="w-24 h-24 bg-white/5 rounded-3xl flex items-center justify-center border border-cyan-400/50">
+                <div class="w-24 h-24 bg-white/5 rounded-3xl flex items-center justify-center border border-cyan-400/50 p-2">
                     <img src="https://i.imgur.com/OTpyIVK.png" class="w-full h-full object-contain">
                 </div>
                 <div>
@@ -283,7 +283,7 @@
         <div id="typing-box" class="px-12 py-4 text-sm text-cyan-400 italic hidden flex items-center gap-3 font-bold"><span class="w-3 h-3 bg-cyan-400 rounded-full animate-ping"></span> Thinking... ✨</div>
         <div class="chat-input-box">
             <button id="mic-btn" class="mic-btn" onclick="toggleVoiceInput()"><i data-lucide="mic" size="24" class="text-cyan-400"></i></button>
-            <input type="text" id="ai-input" placeholder="အမိန့်ပေးပါ ကိုတုတ်..." onkeypress="if(event.key === 'Enter') sendQuery()">
+            <input type="text" id="ai-input" placeholder="အမိန့်ပေးပါ..." onkeypress="if(event.key === 'Enter') sendQuery()">
             <div class="send-btn" onclick="sendQuery()"><i data-lucide="sparkles" size="28"></i></div>
         </div>
     </div>
@@ -360,13 +360,12 @@
         
         function saveAdminData() { localStorage.setItem("tata_rules", document.getElementById('admin-rules').value); localStorage.setItem("tata_data", document.getElementById('admin-data').value); closeAdmin(); }
 
-        // --- UPDATED SECURE BRIDGE API CALL ---
+        // --- Vercel Backend သို့ လှမ်းခေါ်မည့် အပိုင်း ---
         async function callAI(p) {
             const rules = localStorage.getItem("tata_rules") || "";
             const data = localStorage.getItem("tata_data") || "";
             
             try {
-                // Now calling our secure Vercel API backend
                 const r = await fetch('/api/chat', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
