@@ -3,121 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Live's Kabob - Neural Tata v11.9</title>
+    <title>Live's Kabob - Neural Tata v11.8 (Ultimate Core)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Pyidaungsu:wght@400;700&family=Space+Grotesk:wght@700;900&display=swap');
         
         :root {
-            --neon-cyan: #00F0FF; --neon-pink: #FF3DBC; --neon-gold: #FFE600;
-            --bg-dark: #02040a; --glass-bg: rgba(8, 12, 25, 0.7);
+            --neon-cyan: #00F0FF;
+            --neon-pink: #FF3DBC;
+            --neon-gold: #FFE600;
+            --bg-dark: #02040a;
+            --glass-bg: rgba(8, 12, 25, 0.7);
         }
 
         html, body {
-            font-family: 'Pyidaungsu', sans-serif; background-color: var(--bg-dark);
-            color: #f8fafc; margin: 0; padding: 0; width: 100%; height: 100%;
-            overflow: hidden; -webkit-tap-highlight-color: transparent; perspective: 2000px;
+            font-family: 'Pyidaungsu', sans-serif;
+            background-color: var(--bg-dark);
+            color: #f8fafc;
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+            perspective: 2000px;
         }
 
         #landing { 
-            position: fixed; inset: 0; z-index: 9999; background: var(--bg-dark);
+            position: fixed; inset: 0; z-index: 9999; 
+            background: var(--bg-dark);
             display: flex; flex-direction: column; align-items: center; justify-content: flex-end; 
-            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); overflow: hidden; padding: 8vh 0; transform-style: preserve-3d;
+            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+            overflow: hidden;
+            padding: 8vh 0;
+            transform-style: preserve-3d;
         }
 
         .landing-bg {
-            position: absolute; inset: -5vw; background: url('https://i.imgur.com/npi3IR8.jpeg') center/contain no-repeat;
-            filter: brightness(0.9) contrast(1.15); z-index: 3; transform: translateZ(50px);
+            position: absolute; inset: -5vw;
+            background: url('https://i.imgur.com/npi3IR8.jpeg') center/contain no-repeat;
+            filter: brightness(0.9) contrast(1.15);
+            z-index: 3;
+            transform: translateZ(50px);
+            transition: transform 0.1s linear;
         }
 
         .cyber-floor {
             position: absolute; bottom: -30vh; left: -50vw; right: -50vw; height: 100vh;
-            background-image: linear-gradient(rgba(0, 240, 255, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 240, 255, 0.3) 1px, transparent 1px);
-            background-size: 80px 80px; transform: perspective(1200px) rotateX(75deg) translateZ(-150px);
-            animation: grid-scroll 3s linear infinite; z-index: 1;
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.3) 1px, transparent 1px);
+            background-size: 80px 80px;
+            transform: perspective(1200px) rotateX(75deg) translateZ(-150px);
+            animation: grid-scroll 3s linear infinite;
+            z-index: 1;
             mask-image: linear-gradient(to top, rgba(0,0,0,1) 15%, transparent 70%);
+            -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 15%, transparent 70%);
         }
         
-        @keyframes grid-scroll { 0% { background-position: 0 0; } 100% { background-position: 0 80px; } }
+        .horizon-glow {
+            position: absolute; bottom: 38vh; left: -20vw; right: -20vw; height: 2px;
+            background: var(--neon-cyan);
+            box-shadow: 0 0 50px 15px var(--neon-cyan), 0 0 100px 30px var(--neon-pink);
+            z-index: 2; opacity: 0.6;
+            transform: translateZ(-80px);
+        }
 
         .premium-unlock-container {
-            position: relative; z-index: 100; display: flex; flex-direction: column; align-items: center;
-            margin-bottom: 5vh; transform-style: preserve-3d; animation: float-core 5s ease-in-out infinite;
+            position: relative; z-index: 100;
+            display: flex; flex-direction: column; align-items: center;
+            margin-bottom: 5vh;
+            transform-style: preserve-3d;
         }
 
         .diamond-core-container {
             position: relative; width: 140px; height: 140px; margin-bottom: 2vh;
-            display: flex; justify-content: center; align-items: center; cursor: pointer; transform-style: preserve-3d;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer; transform-style: preserve-3d; transition: transform 0.4s;
+        }
+        .diamond-layer-1, .diamond-layer-2, .diamond-layer-3 {
+            position: absolute; inset: 0; border: 2px solid transparent; transform: rotate(45deg);
+        }
+        .diamond-layer-1 { border-color: var(--neon-cyan); box-shadow: 0 0 40px var(--neon-cyan); }
+        .diamond-layer-3 { inset: 30px; background: rgba(0, 240, 255, 0.1); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.8); }
+
+        #app-container { display: none; height: 100vh; width: 100vw; flex-direction: column; background: var(--bg-dark); position: relative; }
+        
+        header { 
+            position: relative; z-index: 100; background: rgba(2,4,10,0.85); backdrop-filter: blur(30px); 
+            padding: 1.2rem 1.5rem; border-bottom: 1px solid rgba(0,240,255,0.3); 
+            display: flex; justify-content: space-between; align-items: center; 
         }
 
-        .diamond-layer-3 { position: absolute; inset: 30px; background: rgba(0, 240, 255, 0.1); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.8); }
+        .ai-hub { position: fixed; bottom: 30px; right: 25px; z-index: 500; display: flex; flex-direction: column; align-items: flex-end; pointer-events: none; }
+        .ai-bubble { 
+            background: #ffffff; color: #000; padding: 20px 25px; border-radius: 30px 30px 4px 30px; 
+            font-size: 0.95rem; font-weight: 800; margin-bottom: 15px; opacity: 0; transform: translateY(20px); 
+            transition: 0.5s; max-width: 320px; border-left: 10px solid var(--neon-pink); line-height: 1.6; 
+        }
+        .ai-bubble.show { opacity: 1; transform: translateY(0); }
+        .ai-avatar-wrapper { position: relative; cursor: pointer; pointer-events: auto; }
+        .ai-avatar { width: 140px; height: auto; filter: drop-shadow(0 0 35px var(--neon-cyan)); }
 
-        #app-container { display: none; height: 100vh; width: 100vw; flex-direction: column; background: var(--bg-dark); }
-        
+        .sop-stage { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 10; }
         .page { 
             position: relative; width: 100%; max-width: 680px; height: 78vh; 
-            background: linear-gradient(rgba(10,15,30,0.85), rgba(10,15,30,0.85)) padding-box, linear-gradient(45deg, var(--neon-cyan), var(--neon-pink), var(--neon-gold)) border-box;
-            border: 3px solid transparent; backdrop-filter: blur(40px); border-radius: 40px; padding: 3.5rem; overflow-y: auto; display: none; flex-direction: column; 
+            background: linear-gradient(rgba(10,15,30,0.85), rgba(10,15,30,0.85)) padding-box,
+                        linear-gradient(45deg, var(--neon-cyan), var(--neon-pink), var(--neon-gold)) border-box;
+            border: 3px solid transparent; backdrop-filter: blur(40px); border-radius: 40px; padding: 3.5rem; 
+            display: none; flex-direction: column; 
         }
-        .page.active { display: flex; animation: card-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .page.active { display: flex; animation: card-reveal 0.8s forwards; }
 
         #ai-panel { position: fixed; inset: 0; background: rgba(2,4,10,0.95); backdrop-filter: blur(30px); z-index: 1000; display: none; flex-direction: column; }
         .chat-area { flex: 1; overflow-y: auto; padding: 2rem 1.5rem; display: flex; flex-direction: column; gap: 20px; }
         
-        .msg.bot { background: rgba(30, 41, 60, 0.6); align-self: flex-start; border: 1px solid rgba(0,240,255,0.3); color: #ffffff; border-radius: 20px; padding: 15px; }
-        .msg.user { background: var(--neon-cyan); color: #000; font-weight: 900; align-self: flex-end; border-radius: 20px; padding: 15px; }
+        .chat-input-box { padding: 1.5rem; background: rgba(5,8,15,0.95); display: flex; gap: 15px; border-top: 1px solid rgba(0,240,255,0.3); align-items: center; }
+        .chat-input-box input { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,240,255,0.3); color: #fff; padding: 20px 25px; border-radius: 40px; outline: none; }
+        .chat-input-box .send-btn { background: var(--neon-cyan); color: black; font-weight: 900; width: 65px; height: 55px; display: flex; align-items: center; justify-content: center; border-radius: 30px; cursor: pointer; }
 
-        .scan-bar { position: absolute; width: 100vw; height: 6px; background: #fff; box-shadow: 0 0 60px 15px var(--neon-cyan); z-index: 10000; top: -100px; }
+        .msg { padding: 20px 28px; border-radius: 30px; max-width: 85%; line-height: 1.7; }
+        .msg.bot { background: rgba(30, 41, 60, 0.6); align-self: flex-start; border-bottom-left-radius: 6px; border: 1px solid rgba(0,240,255,0.3); color: #ffffff; }
+        .msg.user { background: var(--neon-cyan); color: #000; font-weight: 900; align-self: flex-end; border-bottom-right-radius: 6px; }
+        
+        .scan-bar { position: absolute; width: 100vw; height: 6px; background: #fff; box-shadow: 0 0 60px 15px var(--neon-cyan); z-index: 10000; top: -100px; pointer-events: none; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(20px); z-index: 3000; display: none; align-items: center; justify-content: center; }
+        .pass-box { background: rgba(10,15,30,0.9); border: 2px solid var(--neon-cyan); border-radius: 20px; padding: 3rem; text-align: center; width: 90%; max-width: 400px; }
+        .pass-input { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--neon-cyan); color: white; padding: 15px 20px; border-radius: 10px; margin: 20px 0; text-align: center; }
+
         @keyframes laser-scan { 0% { top: -10vh; } 100% { top: 110vh; } }
+        @keyframes card-reveal { 0% { opacity: 0; transform: translateY(80px); } 100% { opacity: 1; transform: translateY(0); } }
+        @keyframes grid-scroll { 0% { background-position: 0 0; } 100% { background-position: 0 80px; } }
     </style>
 </head>
 <body>
+
     <div id="scan-fx" class="scan-bar"></div>
+
+    <div id="name-modal" class="modal-overlay">
+        <div class="pass-box">
+            <i data-lucide="user-check" class="text-cyan-400 mx-auto mb-4" size="50"></i>
+            <input type="text" id="user-name-input" class="pass-input" placeholder="သင့်နာမည်ကို ရိုက်ထည့်ပါ..." onkeypress="if(event.key === 'Enter') submitName()">
+            <button onclick="submitName()" class="w-full py-4 rounded-lg bg-cyan-500 text-black font-black uppercase tracking-widest">Access System</button>
+        </div>
+    </div>
+
     <div id="landing">
+        <div class="horizon-glow"></div>
         <div class="cyber-floor"></div>
         <div class="landing-bg"></div>
         <div class="premium-unlock-container">
             <div class="diamond-core-container" onclick="triggerScan()">
-                <div class="diamond-layer-3"></div>
+                <div class="diamond-layer-1"></div><div class="diamond-layer-3"></div>
                 <i data-lucide="zap" class="text-white relative z-20" size="50"></i>
             </div>
-            <span class="text-cyan-400 font-black tracking-widest text-xs uppercase">Initialize System</span>
+            <span class="text-cyan-400 font-black tracking-[0.4em] text-xs uppercase mt-4">Initialize System</span>
         </div>
     </div>
 
     <div id="app-container">
-        <header class="p-4 border-b border-cyan-400/30 flex justify-between items-center">
-            <h1 class="text-white font-bold uppercase">Live's Kabob Core</h1>
-            <button onclick="openChatPanel()" class="p-2 bg-cyan-500/20 rounded-full"><i data-lucide="message-square" class="text-cyan-400"></i></button>
+        <header>
+            <div class="flex items-center gap-5">
+                <img src="https://i.imgur.com/gAev5xH.png" class="w-16 h-16 rounded-2xl border-2 border-cyan-400">
+                <div>
+                    <div class="font-black text-white tracking-[0.2em] uppercase">Live's Kabob</div>
+                    <div class="text-[9px] text-cyan-400 font-bold tracking-[0.5em] mt-1">Neural Tata v11.8</div>
+                </div>
+            </div>
         </header>
-        <main class="flex-1 flex items-center justify-center p-6">
+
+        <div class="ai-hub">
+            <div class="ai-bubble" id="speak-bubble">မင်္ဂလာပါရှင် ✨</div>
+            <div class="ai-avatar-wrapper" onclick="toggleAI()">
+                <img src="https://i.imgur.com/OTpyIVK.png" class="ai-avatar">
+            </div>
+        </div>
+
+        <main class="sop-stage">
             <div id="sop-pages"></div>
+            <div class="fixed bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-12 z-[200]">
+                <button onclick="changePage(-1)" class="w-20 h-20 rounded-full border-2 border-cyan-400 text-cyan-400 bg-black/50"><i data-lucide="chevron-left" size="42"></i></button>
+                <div id="page-indicator" class="text-cyan-400 font-black text-3xl tracking-[0.3em]">1 / 7</div>
+                <button onclick="changePage(1)" class="w-20 h-20 rounded-full border-2 border-cyan-400 text-cyan-400 bg-black/50"><i data-lucide="chevron-right" size="42"></i></button>
+            </div>
         </main>
-        <footer class="p-8 flex justify-center gap-10">
-            <button onclick="changePage(-1)" class="p-4 border border-cyan-400 rounded-full"><i data-lucide="chevron-left" class="text-cyan-400"></i></button>
-            <button onclick="changePage(1)" class="p-4 border border-cyan-400 rounded-full"><i data-lucide="chevron-right" class="text-cyan-400"></i></button>
-        </footer>
     </div>
 
     <div id="ai-panel">
-        <header class="p-6 border-b border-cyan-400 flex justify-between">
-            <span class="text-cyan-400 font-bold">TATA v11.9 AI</span>
-            <button onclick="closeChatPanel()"><i data-lucide="x" class="text-white"></i></button>
+        <header class="p-8 flex justify-between border-b border-cyan-400/50 items-center">
+            <div class="flex items-center gap-6">
+                <img src="https://i.imgur.com/OTpyIVK.png" class="w-24 h-24 object-contain border border-cyan-400/50 rounded-3xl">
+                <div>
+                    <div class="font-black text-cyan-400 text-3xl uppercase">TATA v11.8</div>
+                    <div class="text-[11px] text-green-400 font-bold uppercase mt-3" id="user-linked-text">Identity Core Linked</div>
+                </div>
+            </div>
+            <button onclick="closeChatPanel()"><i data-lucide="x" class="text-white" size="55"></i></button>
         </header>
-        <div id="chat-box" class="chat-area"></div>
-        <div class="p-4 flex gap-2">
-            <input type="text" id="ai-input" class="flex-1 bg-white/10 p-4 rounded-xl text-white outline-none" placeholder="မေးမြန်းနိုင်ပါပြီ..." onkeypress="if(event.key==='Enter') sendQuery()">
-            <button onclick="sendQuery()" class="p-4 bg-cyan-400 rounded-xl"><i data-lucide="send"></i></button>
+        <div class="chat-area" id="chat-box"></div>
+        <div class="chat-input-box">
+            <input type="text" id="ai-input" placeholder="အမိန့်ပေးပါ အစ်ကို..." onkeypress="if(event.key==='Enter') sendQuery()">
+            <div class="send-btn" onclick="sendQuery()"><i data-lucide="sparkles" size="28"></i></div>
         </div>
     </div>
 
     <script>
         lucide.createIcons();
-        let curPage = 0;
-        const apiKey = "YOUR_GEMINI_API_KEY"; // အစ်ကို့ API Key ဤနေရာတွင် ထည့်ပါ
+        let curPage = 0; let currentUserName = "";
 
-        const sopData = [{ t: "မဟာဗျူဟာ", c: "Live's ကို Premium Restaurant အဖြစ် ကူးပြောင်းမည်။" },{ t: "၇ စက္ကန့် စံနှုန်း", c: "ဧည့်သည်ရောက်လျှင် ၇ စက္ကန့်အတွင်း နှုတ်ဆက်ပါ။" },{ t: "Final Wipe", c: "ဟင်းပွဲမထွက်ခင် ပန်းကန်ဘောင်ကို တစ်ရှူးဖြူဖြင့် သုတ်ပါ။" }];
+        const sopData = [
+            { t: "မဟာဗျူဟာ", c: "Live's ကို Premium Restaurant အဖြစ် ကူးပြောင်းမည်။" },
+            { t: "၇ စက္ကန့် စံနှုန်း", c: "ဧည့်သည်ရောက်လျှင် ၇ စက္ကန့်အတွင်း နှုတ်ဆက်ပါ။" },
+            { t: "Final Wipe", c: "ဟင်းပွဲမထွက်ခင် ပန်းကန်ဘောင်ကို တစ်ရှူးဖြူဖြင့် သုတ်ပါ။" },
+            { t: "Battle-Ready", c: "မနက် ၈:၄၅ ရောက်ရမည်။ ၉:၀၀ အသင့်ဖြစ်ရမည်။" }
+        ];
 
         function triggerScan() { 
             document.getElementById('scan-fx').style.animation = 'laser-scan 0.8s forwards'; 
@@ -125,39 +223,62 @@
                 document.getElementById('landing').style.display = 'none';
                 document.getElementById('app-container').style.display = 'flex';
                 buildSOP();
-            }, 600);
+            }, 600); 
         }
 
-        function buildSOP() {
-            const container = document.getElementById('sop-pages');
-            container.innerHTML = '';
-            sopData.forEach((item, i) => {
-                const div = document.createElement('div');
-                div.className = `page ${i === 0 ? 'active' : ''}`;
-                div.innerHTML = `<h1 class="text-cyan-400 text-4xl font-black mb-6">${item.t}</h1><p class="text-2xl">${item.c}</p>`;
-                container.appendChild(div);
-            });
+        function buildSOP() { 
+            const c = document.getElementById('sop-pages'); 
+            c.innerHTML = ''; 
+            sopData.forEach((item, i) => { 
+                const div = document.createElement('div'); 
+                div.className = `page ${i===0?'active':''}`; 
+                div.innerHTML = `<h1 class="text-cyan-400 font-black text-5xl mb-12 border-l-8 border-pink-500 pl-8 uppercase">${item.t}</h1><div class="text-slate-100 text-3xl font-bold">${item.c}</div>`; 
+                c.appendChild(div); 
+            }); 
+            document.getElementById('page-indicator').textContent = `1 / ${sopData.length}`;
         }
 
-        function changePage(dir) {
-            const p = document.querySelectorAll('.page');
-            if (p.length === 0) return;
-            p[curPage].classList.remove('active');
-            curPage = (curPage + dir + p.length) % p.length;
-            p[curPage].classList.add('active');
+        function changePage(dir) { 
+            const p = document.querySelectorAll('.page'); 
+            p[curPage].classList.remove('active'); 
+            curPage = (curPage + dir + p.length) % p.length; 
+            p[curPage].classList.add('active'); 
+            document.getElementById('page-indicator').textContent = `${curPage + 1} / ${p.length}`; 
         }
 
+        function toggleAI() { if(!currentUserName) document.getElementById('name-modal').style.display = 'flex'; else openChatPanel(); }
+        function submitName() { 
+            const val = document.getElementById('user-name-input').value.trim(); 
+            if(val) { 
+                currentUserName = val; 
+                document.getElementById('user-linked-text').textContent = `Linked: ${val}`; 
+                document.getElementById('name-modal').style.display='none'; 
+                openChatPanel(); 
+            } 
+        }
+        
         function openChatPanel() { document.getElementById('ai-panel').style.display = 'flex'; }
         function closeChatPanel() { document.getElementById('ai-panel').style.display = 'none'; }
 
-        async function sendQuery() {
-            const input = document.getElementById('ai-input');
-            const q = input.value.trim();
-            if (!q) return;
+        // --- FIXED BRIDGE INTEGRATION (GROQ VERSION) ---
+        async function sendQuery() { 
+            const i = document.getElementById('ai-input'), q = i.value.trim(); 
+            if(!q) return; 
+            
             addMessage(q, 'user');
-            input.value = '';
-            // AI Call logic goes here
-            addMessage("တာတာ အချက်အလက်များကို စစ်ဆေးနေပါတယ်ရှင့်...", 'bot');
+            i.value = ''; 
+
+            try { 
+                const response = await fetch('/api/chat', { 
+                    method: 'POST', 
+                    headers: {'Content-Type': 'application/json'}, 
+                    body: JSON.stringify({ prompt: q, userName: currentUserName }) 
+                }); 
+                const data = await response.json(); 
+                addMessage(data.reply, 'bot'); 
+            } catch(e) { 
+                addMessage("Bridge Error တက်နေပါတယ် အစ်ကို။", 'bot'); 
+            }
         }
 
         function addMessage(txt, side) {
@@ -168,6 +289,11 @@
             box.appendChild(div);
             box.scrollTop = box.scrollHeight;
         }
+
+        setInterval(() => { 
+            const b = document.getElementById('speak-bubble'); 
+            b.classList.add('show'); setTimeout(() => b.classList.remove('show'), 4000); 
+        }, 20000);
     </script>
 </body>
 </html>
